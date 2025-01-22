@@ -124,20 +124,71 @@
 
 \section{Jan 22}
 \subsection*{Motivations - Applications + Phenomena}
+\begin{enumerate}
+    \item \tbf{Bifurcation theory:} How do systems change as parameters change?
 
-\tbf{Bifurcation theory:} How do systems change as parameters change?
+          \emph{Examples:}
+          \begin{itemize}
+              \item Mechanical systems (e.g. what will happen to a bead as an apparatus is rotated at velocity $\omega$?)
+              \item Chemical reactions (e.g. Belusov-Zhabotinsky reaction - oscillations in chemical reactions)
+              \item Tipping points (e.g. climate change, convection currents)
+              \item Population dynamics (e.g. predator-prey models, outbreaks)
+              \item Synchronization (e.g. firefly synchronous lighting, brain activity patterns)
+              \item Chaotic dynamics (e.g. double pendulum)
+          \end{itemize}
 
-\emph{Examples:}
-\begin{itemize}
-    \item Mechanical systems (e.g. what will happen to a bead as an apparatus is rotated at velocity $\omega$?)
-    \item Chemical reactions (e.g. Belusov-Zhabotinsky reaction - oscillations in chemical reactions)
-    \item Tipping points (e.g. climate change, convection currents)
-    \item Population dynamics (e.g. predator-prey models, outbreaks)
-    \item Synchronization (e.g. firefly synchronous lighting, brain activity patterns)
-    \item Chaotic dynamics (e.g. double pendulum)
-\end{itemize}
+    \item \tbf{Existence and Uniqueness}
 
+    \item \tbf{Dynamical theory}
 
+    \item \tbf{Chaotic dynamics}
+\end{enumerate}
 
+\subsection*{Bifurcation Theory}
+\tbf{Example (Overdamped bead on loop)}
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw (0,0) circle (2);
+        \draw[fill, blue] ({-sqrt(2)},{-sqrt(2)}) circle (0.1);
+
+        \draw (0, 3) -- (0, -3);
+        \draw[->, dashed, red, rotate=-90] ([shift=(-150:0.5)]-2, 0) arc (-150:150:0.1 and 0.5);
+
+    \end{tikzpicture}
+\end{center}
+
+\tbf{Goal:} What will happen to the bead as the loop is rotated at velocity $\omega$?
+
+We assume that the only forces on the bead are gravitation, friction, and centrifugal force.
+
+This gives a force diagram:
+\begin{center}
+    \begin{tikzpicture}
+
+        \draw (0,0) circle (0.05);
+        \draw[->] (0, 0) -- (0,-2) node[below] {$mg$};
+
+        \draw (0, 0) arc[start angle =-45, end angle = 0, radius = 2];
+        \draw (0, 0) arc[start angle =-45, end angle = -90, radius = 2];
+
+        \draw[->, dashed] (-2,0) -- (0,0);
+        \draw[->] (0, 0) -- (2, 0) node[right] {$mr\omega^2\sin \phi$};
+
+        \draw[blue] (-2, -2) -- (2, 2) node[above, right] {Tangent to loop};
+
+        \draw[green!60!black] (0.5, 0)  arc[start angle = 0, end angle = 45, radius = 0.5] node[right] {$\phi$};
+    \end{tikzpicture}
+\end{center}
+
+From Newton's law,
+\[\underbrace{mr \frac{d^2\phi}{dt^2}}_{\text{acceleration}} = -b \frac{d\phi}{dt} - mg \sin \phi + m\omega^2 r \sin\phi \cos \phi\]
+
+Assuming $b \gg 1$, we can neglect the LHS so
+\begin{align*}
+    \frac{d\phi}{dt} & = -\frac{mg}{b}\sin \phi + \frac{m\omega^2 r}{b} \sin \phi \cos \phi    \\
+                     & = \frac{mg}{b} \sin \phi \left(\frac{\omega^2 r}{g} \cos \phi- 1\right) \\
+                     & = a \sin \phi (\mu \cos \phi - 1)
+\end{align*}
 
 \end{document}
