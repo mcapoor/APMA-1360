@@ -2299,7 +2299,12 @@ This can give us a sense of the full behavior of the system:
             \node[below right] at (B) {attractor};
             \node[right] at (C) {saddle};
 
-            \draw[->] (O) to[bend right] (A);
+            \draw[->,
+                decoration={
+                        markings,
+                        mark=at position 0.25 with {\arrow{>}},
+                        mark=at position 0.75 with {\arrow{>}}},
+                postaction={decorate}] (O) to[bend right] (A);
             \draw[->] (O) to[bend left] (B);
             \draw[->] (O) -- (C);
 
@@ -2313,6 +2318,8 @@ This can give us a sense of the full behavior of the system:
     \end{tikzpicture}
 \end{center}
 
+
+
 \tbf{Conclusions:} in this example, we have two competing species. With our parameter choices, we could see extinction of one species or no stable coexistence
 
 We can do a little more work to analyze the saddle point:
@@ -2323,6 +2330,278 @@ We can do a little more work to analyze the saddle point:
         f_x & f_y \\
         g_x & g_y
     \end{pmatrix}_{(x, y) = (x_*, y_*)} \implies \lambda_1 < 0 < \lambda_2 \text{ eigenvalues}\]
+
+\section{Feb 14}
+\subsection{Phase Plane Analysis}
+\tbf{Goal:} Understand the dynamics of $\dot u =  F(u)$ ($u \in \R^2, F \in C^1$)
+
+Our method is to
+\begin{enumerate}
+    \item Find equilibria (solve $F(u_*) = 0$)
+    \item Determine their stability using the Jacobian $F_u(u_*)$ and its eigenvalues
+    \item Compute and plot the nullclines for $F(u) = (F_1(u), F_2(u))$ (find the curves for which $F_i(u) = 0$)
+    \item Draw phase portrait indicating equilibria, nullclines, and representative solutions
+\end{enumerate}
+
+\subsection{Nullclines (Revisited)}
+Let $h: \R^2 \to \R$ be a $C^1$ function.
+
+We can take the \tbf{gradient} $\nabla h(x, y) = \begin{pmatrix}
+        h_x(x, y) \\
+        h_y(x, y)
+    \end{pmatrix} \in \R^2$.
+
+Suppose we already know the nullcline $\{(x, y): h(x, y) = 0\}$:
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                domain=0:4,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                ymin=0, ymax=2,
+                xmin=0, xmax=4,
+                view = {0}{90}
+            ]
+
+            \addplot[name path=y0, blue, ultra thick, smooth, tension=1] plot coordinates {(1, 0.5) (3, 1) (4, 2)} node[above] {$h = 0$};
+
+            \node[red] at (3, 1) {$\bullet$} node[below right, red] at (3, 1) {$(x_*, y_*)$};
+
+            \draw[->, red] (3, 1) -- ++(-0.5, 0.5) node[above] {$\nabla h(x_*, y_*)$};
+
+            \node at (3, 0.5) {$h < 0$};
+            \node at (1, 2) {$h > 0$};
+
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+The gradient is perpendicular to nullclines at each point and points in the direction of increasing $h$.
+
+Now consider
+\[\begin{cases}
+        \dot x = f(x, y, \mu) \\
+        \dot y = g(x, y, \mu)
+    \end{cases}, \quad f, g \in C^1\]
+with equilibrium $(x_*, y_*)$ at $\mu = \mu_*$ so that $f(x_*, y_*, \mu_*) = g(x_*, y_*, \mu_*) = 0$.
+
+Let $\nabla f(x_*, y_*, \mu_*)$ and $\nabla g(x_*, y_*, \mu_*)$ be the gradients of $f$ and $g$ at $(x_*, y_*, \mu_*)$.
+
+We know
+\begin{enumerate}
+    \item $\nabla f$ and $\nabla g$ are linearly independent
+
+          \begin{center}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          domain=0:4,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$x$},
+                          ylabel={$y$},
+                          ymin=0, ymax=2,
+                          xmin=0, xmax=4,
+                          view = {0}{90}
+                      ]
+
+                      \draw[green, ->] (2, 1) -- ++(0.5, 0.5) node[above right, scale=0.75] {$\nabla f(x_*, y_*, \mu_*)$};
+                      \draw[blue, ->] (2, 1) -- ++(-0.5, 0.5) node[above left, scale=0.75] {$\nabla g(x_*, y_*, \mu_*)$};
+
+                      \draw[blue] (2, 1) -- ++(-1, -0.5);
+                      \draw[blue] (2, 1) -- ++(1, 0.5) node[below right, scale=0.75] {nullcline g};
+
+                      \draw[green] (2, 1) -- ++(1, -0.5) node[right, scale=0.75] {nullcline f};
+                      \draw[green] (2, 1) -- ++(-1, 0.5);
+
+                      \node[red] at (2, 1) {$\bullet$} node[right, red] at (2, 1) {$(x_*, y_*)$};
+                  \end{axis}
+              \end{tikzpicture}
+          \end{center}
+
+          Since we have continuous differentiability, for all $\mu$ near $\mu_*$, we will have a unique equilibrium near $(x_*, y_*)$ with similar nullclines. We say ``the equilibrium persists''
+
+    \item $\nabla f(x_*, y_*, \mu_*)$ and $\nabla g(x_*, y_*, \mu_*)$ are nonzero and linearly dependent.
+
+          \begin{center}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          domain=0:4,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$x$},
+                          ylabel={$y$},
+                          ymin=0, ymax=2,
+                          xmin=0, xmax=4,
+                          view = {0}{90}
+                      ]
+
+                      \draw[green, ->] (2, 1) -- ++(0, 0.5) node[above, scale=0.75] {$\nabla f(x_*, y_*, \mu_*)$};
+                      \draw[blue, ->] (2, 1) -- ++(0, -0.5) node[above left, scale=0.75] {$\nabla g(x_*, y_*, \mu_*)$};
+
+                      \addplot[green] {1/4*(x-2)^2 + 1} node[below right, scale=0.75] {nullcline f};
+                      \addplot[blue, domain=0.5:3.5] {1/2*(x-2)^2 + 1} node[right, scale=0.75] {nullcline g};
+
+
+                      \node[red] at (2, 1) {$\bullet$} node[right, red] at (2, 1) {$(x_*, y_*)$};
+                  \end{axis}
+              \end{tikzpicture}
+          \end{center}
+
+          where the nullclines must be tangenst to each other.
+
+          In this case, we have two options for $\mu \neq \mu_*$:
+
+          \begin{center}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          domain=0:4,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$x$},
+                          ylabel={$y$},
+                          ymin=0, ymax=2,
+                          xmin=0, xmax=4,
+                          view = {0}{90}
+                      ]
+
+                      \addplot[green] {1/4*(x-2)^2 + 0.5};
+                      \addplot[blue, domain=0.5:3.5] {1/2*(x-2)^2 + 0.7};
+
+                      \node at (2, -0.5) {no equilibria};
+                  \end{axis}
+              \end{tikzpicture}
+              \hspace{1cm}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          domain=0:4,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$x$},
+                          ylabel={$y$},
+                          ymin=0, ymax=2,
+                          xmin=0, xmax=4,
+                          view = {0}{90}
+                      ]
+
+                      \addplot[green, name path=g] {1/4*(x-2)^2 + 0.7};
+                      \addplot[blue, domain=0.5:3.5, name path=b] {1/2*(x-2)^2 + 0.4};
+
+                      \fill [name intersections={of=g and b, total=\t}]
+                      \foreach \s in {1,...,\t}{(intersection-\s) node[red] {$\bullet$}};
+
+                      \node at (2, -0.5) {two equilibria};
+                  \end{axis}
+              \end{tikzpicture}
+          \end{center}
+          which tells us that we have a saddle node.
+\end{enumerate}
+
+\begin{tbox}{\textbf{Lemma:} Let $(x_*, y_*)$ be an equiibrium of $\begin{pmatrix}
+                \dot x \\ \dot y
+            \end{pmatrix}= \begin{pmatrix}
+                f(x, y, \mu) \\ g(x, y, \mu)
+            \end{pmatrix}$ with Jacobian $A = \begin{pmatrix}
+                f_x & f_y \\ g_x & g_y
+            \end{pmatrix}_{(x, y) = (x_*, y_*)}$, then $A$ has an eigenvalue at $0$ iff $\nabla f(x_*, y_*)$ and $\nabla g(x_*, y_*)$ are linearly dependent.}
+    \emph{Proof:}
+    \[\nabla f = \begin{pmatrix}
+            f_x \\
+            f_y
+        \end{pmatrix}, \quad \nabla g = \begin{pmatrix}
+            g_x \\
+            g_y
+        \end{pmatrix} \implies A = \begin{pmatrix}
+            \nabla f^T \\
+            \nabla g^T
+        \end{pmatrix}\]
+
+    Hence, it suffices to show $A$ has an eigenvalue at $0$ iff $\det A = 0$.
+
+    In the plane, the determinant corresponds to the area of the parallelogram spanned by two vectors. Hence, $\det A = 0$ implies that $\nabla f$ and $\nabla g$ are linearly dependent and vice versa. $\qed$
+\end{tbox}
+
+\tbf{Remark:} For $u \in \R$, we saw the condition for a bifurcation at $u_*$ was $f_u(u_*) = 0$. For $u \in \R^2$, meanwhile, the condition for bifurcation is that the Jacobian has an eigenvalue at $0$.
+
+\subsection{Application (Autocatalytic gene-protein interaction)}
+Let $x$ be a protein $P$ and $y$ be a gene $G$ where
+\begin{enumerate}
+    \item the gene $G$ codes for protein $P$
+    \item the protein $P$ upregulates the gene $G$
+\end{enumerate}
+\[\begin{cases}
+        \dot x = -ax + y = f(x, y) \\
+        \dot y = \frac{x^2}{1 + x^2} - \frac{y}{2} = g(x, y)
+    \end{cases}\]
+
+Here, if $y > 0$, the gene is active and produces protein (interaction 1). In the first equation, the protein also naturally degrades at rate $a$.
+
+In the second equation, the first term models the upregulation of the gene by the protein (interaction 2) and the second models the gene switching off.
+
+Let us now do the phase-plane analysis, focusing on the nullclines.
+
+The nullcline of $f$ is given by
+\[\{(x, y): -ax + y = 0\} = \{(x, ax): x \in \R\}\]
+and the nullcline of $g$ is given by
+\[\{(x, y): \frac{x^2}{1 + x^2} - \frac{y}{2} = 0\} = \{(x, \frac{2x^2}{1 + x^2}): x \in \R\}\]
+
+We can plot:
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.4\textwidth,
+                axis lines=middle,
+                no markers,
+                domain=0:10,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                ymin=0, ymax=4.5,
+                xmin= 0, xmax=10,
+                view = {0}{90}
+            ]
+
+            \addplot[name path=y0, green] {4/(1 + e^(4-x)) - 0.07} node[right] {nullcline $g$};
+
+            \addplot[name path=x1, blue, domain=0:8] {0.6*x} node[above left] {nullcline $f$ for $a = a_*$};
+            \addplot[name path=x2, blue, domain=0:1] {4*x} node[left] {nullcline $f$ for $a \gg 1$};
+            \addplot[name path=x3, blue] {1/2*x} node[right] {nullcline $f$ for $0 < a \ll 1$};
+
+            \fill [name intersections={of=x3 and y0, total=\t}]
+            \foreach \s in {1,...,\t}{(intersection-\s) node[red] {$\bullet$}};
+
+            \node[red] at (5.7, 3.4) {$\bullet$};
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+Our next step is to fix $a < a_*$ and determine stability.
+
+
 \end{document}
 
 
