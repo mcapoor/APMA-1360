@@ -204,8 +204,7 @@ This gives a force diagram:
 From Newton's law,
 \[\underbrace{mr \frac{d^2\phi}{dt^2}}_{\text{acceleration}} = -b \frac{d\phi}{dt} - mg \sin \phi + m\omega^2 r \sin\phi \cos \phi\]
 
-Assuming $b \gg 1$, we can neglec
-t the LHS so
+Assuming $b \gg 1$, we can neglect the LHS so
 \begin{align*}
     \frac{d\phi}{dt} & = -\frac{mg}{b}\sin \phi + \frac{m\omega^2 r}{b} \sin \phi \cos \phi    \\
                      & = \frac{mg}{b} \sin \phi \left(\frac{\omega^2 r}{g} \cos \phi- 1\right) \\
@@ -1184,7 +1183,7 @@ Hence:
     \end{tikzpicture}
 \end{center}
 
-\subsection{Summary of Bifucations (so far):}
+\subsection{Summary of Bifurcations (so far):}
 \begin{itemize}
     \item Pitchfork bifurcation
 
@@ -1246,7 +1245,7 @@ Hence:
               \end{tikzpicture}
           \end{center}
 
-    \item Fold/turning-point/saddle-node Bifucration
+    \item Fold/turning-point/saddle-node Bifurcation
 
           \begin{center}
               \begin{tikzpicture}
@@ -1562,7 +1561,7 @@ Hence:
               \end{cases}\]
           where the first condition comes from the fact that the Taylor Series contains only odd powers of $u$.
 
-          This has two possible birfurcation diagrams:
+          This has two possible bifurcation diagrams:
           \begin{center}
               \begin{tikzpicture}
                   \begin{axis}[
@@ -1977,7 +1976,7 @@ let $u \in \R^n$, $F: \R^n \to \R^n$ in $C^1$ with initial condition $u_0 \in \R
 \begin{proposition}
     \textbf{Theorem (Existence and Uniqueness):} Assume $F: \R^n \to \R^n$ is $C^1$. For each $u_0 \in \R^n$, there exists a $\delta > 0$ and a unique $u: (-\delta, \delta) \to \R^n$ so that $u \in C^1$ which satisfies the system above for all $t \in (-\delta, \delta)$.
 
-    Fuerthermore, $\delta$ can be chosen to depend continuously on $u_0$ so the map $u_0 \mapsto u(t;\, u_0)$ is $C^1$ in $u_0$ (where $u(t; \, u_0)$ denotes the unique solution of the system for $t \in (-\delta, \delta)$.)
+    Furthermore, $\delta$ can be chosen to depend continuously on $u_0$ so the map $u_0 \mapsto u(t;\, u_0)$ is $C^1$ in $u_0$ (where $u(t; \, u_0)$ denotes the unique solution of the system for $t \in (-\delta, \delta)$.)
 \end{proposition}
 
 \tbf{Consequences:} Trajectories $\{u(t): t \in \R\}$ cannot touch or cross.
@@ -2042,7 +2041,7 @@ where $\bullet \hspace{-10pt}\longrightarrow$ represents a \tbf{vector field} wh
     \end{tikzpicture}
 \end{center}
 
-\tbf{Planar Systems:} uniqueness poses interesting obstables. For example, how does $u(t)$ evolve as $t \to \infty$?
+\tbf{Planar Systems:} uniqueness poses interesting obstacles. For example, how does $u(t)$ evolve as $t \to \infty$?
 
 \begin{center}
     \begin{tikzpicture}
@@ -2057,7 +2056,7 @@ where $\bullet \hspace{-10pt}\longrightarrow$ represents a \tbf{vector field} wh
     \end{tikzpicture}
 \end{center}
 
-\subsection{Equilibria, Periodic Orbits, and Heteroclonic Orbits}
+\subsection{Equilibria, Periodic Orbits, and Heteroclinic Orbits}
 
 Let $\dot u = F(u)$ with $u \in \R^n$ and $F: \R^n \to \R^n$ in $C^1$.
 
@@ -2090,7 +2089,7 @@ Let $\dot u = F(u)$ with $u \in \R^n$ and $F: \R^n \to \R^n$ in $C^1$.
 \begin{itemize}
     \item Suppose we have two species occupying the same spatial region and competing for the same food resources
     \item We can use a logistic model for each species with species-specific growth rates and carrying capacities
-    \item The competition for resources reduces carrying capacity of other species: we assume that this effect is proportional to population size of competing speicies
+    \item The competition for resources reduces carrying capacity of other species: we assume that this effect is proportional to population size of competing species
 \end{itemize}
 
 For example,
@@ -2098,7 +2097,7 @@ For example,
         \dot x = x(3 - x) - 2xy = x(3 - x - 2y) = f(x, y) \\
         \dot y = \underbrace{y(2 - 4)}_{\text{logistic mode}} - \underbrace{xy}_{\text{competition}} = y(2 - x - y) = g(x, y)
     \end{cases}\]
-(e.g. $x$ is rappit population, $y$ is sheep population)
+(e.g. $x$ is rabbit population, $y$ is sheep population)
 
 Then the equilibria are given by $(f(x, y), g(x, y)) = (0, 0)$:
 \[(x, y) = (0, 0), \; (0, 2),\; (3, 0),\; (1, 1)\]
@@ -2107,7 +2106,7 @@ And to find stability, we can take a Taylor Expansion near rest state $(x_*, y_*
 \[F(x, y) = \underbrace{F(x_*, y_*)}_{0} + F_u(x_*, y_*) \begin{pmatrix}
         x - x_* \\ y - y_*
     \end{pmatrix} + \dots\]
-and since we ahve
+and since we have
 \[F_u(x, y) = \begin{pmatrix}
         f_x & f_y \\
         g_x & g_y
@@ -2294,7 +2293,7 @@ This can give us a sense of the full behavior of the system:
             \draw[red] (3, 0) -- (0, 3/2);
 
 
-            \node[below right] at (O) {repellor};
+            \node[below right] at (O) {repeller};
             \node[above right] at (A) {attractor};
             \node[below right] at (B) {attractor};
             \node[right] at (C) {saddle};
@@ -2462,7 +2461,7 @@ We know
               \end{tikzpicture}
           \end{center}
 
-          where the nullclines must be tangenst to each other.
+          where the nullclines must be tangent to each other.
 
           In this case, we have two options for $\mu \neq \mu_*$:
 
@@ -2519,7 +2518,7 @@ We know
           which tells us that we have a saddle node.
 \end{enumerate}
 
-\begin{tbox}{\textbf{Lemma:} Let $(x_*, y_*)$ be an equiibrium of $\begin{pmatrix}
+\begin{tbox}{\textbf{Lemma:} Let $(x_*, y_*)$ be an equilibrium of $\begin{pmatrix}
                 \dot x \\ \dot y
             \end{pmatrix}= \begin{pmatrix}
                 f(x, y, \mu) \\ g(x, y, \mu)
