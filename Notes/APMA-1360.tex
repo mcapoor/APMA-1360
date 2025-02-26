@@ -35,7 +35,17 @@
 \usepackage{tikz-cd}
 \pgfplotsset{compat=1.18}
 \usetikzlibrary{intersections, calc, decorations.markings}
-
+\usepgfplotslibrary{polar}
+\tikzset{
+    marking along/.style n args={2}{
+        decoration={
+                markings, 
+                mark=at position #1 with {\arrow{#2}}
+        },
+        postaction={decorate}
+        },
+    marking along/.default={0.5}{>}
+}
 
 \newcommand{\ans}[1]{\boxed{\text{#1}}}
 \newcommand{\vecs}[1]{\langle #1\rangle}
@@ -126,7 +136,7 @@
 ]}
 {\end{tcolorbox}}
 
-
+\colorlet{mygreen}{green!50!teal}
 
 \title{APMA 1360: Applied Dynamical Systems}
 \author{Milan Capoor}
@@ -171,7 +181,7 @@
         \draw[dashed, blue] (0,0) -- (B) node[midway, left] {$r$};
 
         \draw (0, 3) -- (0, -3);
-        \draw[->, green!60!black] (0, -1) arc (-90:-130:1) node[midway, below] {$\phi$};
+        \draw[->, mygreen] (0, -1) arc (-90:-130:1) node[midway, below] {$\phi$};
 
         \draw[->, dashed, red, rotate=-90] ([shift=(-150:0.5)]-2, 0) arc (-150:150:0.1 and 0.5);
 
@@ -197,7 +207,7 @@ This gives a force diagram:
 
         \draw[blue] (-2, -2) -- (2, 2) node[above, right] {Tangent to loop};
 
-        \draw[green!60!black] (0.5, 0)  arc[start angle = 0, end angle = 45, radius = 0.5] node[right] {$\phi$};
+        \draw[mygreen] (0.5, 0)  arc[start angle = 0, end angle = 45, radius = 0.5] node[right] {$\phi$};
     \end{tikzpicture}
 \end{center}
 
@@ -244,15 +254,10 @@ Assuming $b \gg 1$, we can neglect the LHS so
             \node[red, above] (u2) at (axis cs:-3/2,0) {$u_2$};
             \node[red, right, above] (u3) at (axis cs:5,0) {$u_3$};
 
-            \coordinate (u1) at (axis cs:-5,0);
-            \coordinate (u2) at (axis cs:-3/2,0);
-            \coordinate (u3) at (axis cs:5,0);
-
+            \node[red] at (axis cs:-5,0) {$\bullet$};
+            \node[red] at (axis cs:-3/2,0) {$\bullet$};
+            \node[red] at (axis cs:5,0) {$\bullet$};
         \end{axis}
-        \draw[red, fill] (u1) circle (0.05);
-        \draw[red, fill] (u2) circle (0.05);
-        \draw[red, fill] (u3) circle (0.05);
-
     \end{tikzpicture}
 \end{center}
 
@@ -299,14 +304,14 @@ So we can draw the phase diagram
             \coordinate (u3) at (axis cs:5,0);
 
 
-            \node[green!60!black] at (axis cs:-4.5, 0) {$<$};
-            \node[green!60!black] at (axis cs:-5.5, 0) {$>$};
+            \node[mygreen] at (axis cs:-4.5, 0) {$<$};
+            \node[mygreen] at (axis cs:-5.5, 0) {$>$};
 
-            \node[green!60!black] at (axis cs:-2, 0) {$<$};
-            \node[green!60!black] at (axis cs:-1, 0) {$>$};
+            \node[mygreen] at (axis cs:-2, 0) {$<$};
+            \node[mygreen] at (axis cs:-1, 0) {$>$};
 
-            \node[green!60!black] at (axis cs:4.5, 0) {$>$};
-            \node[green!60!black] at (axis cs:5.5, 0) {$<$};
+            \node[mygreen] at (axis cs:4.5, 0) {$>$};
+            \node[mygreen] at (axis cs:5.5, 0) {$<$};
         \end{axis}
         \draw[red, fill] (u1) circle (0.05);
         \draw[red, fill] (u2) circle (0.05);
@@ -2028,7 +2033,7 @@ where $\bullet \hspace{-10pt}\longrightarrow$ represents a \tbf{vector field} wh
         \node[red] at (2, 3) {$\bullet$};
 
         \draw[blue, ->] (1, 1.2) to[bend left] (3, 3.5);
-        \draw[green, ->] (3, 2.5) to[bend left] (1, 4.5);
+        \draw[mygreen, ->] (3, 2.5) to[bend left] (1, 4.5);
 
         %%%
 
@@ -2037,7 +2042,7 @@ where $\bullet \hspace{-10pt}\longrightarrow$ represents a \tbf{vector field} wh
         \node[red] at (7, 2) {$\bullet$} node[right] {$u_0$};
 
         \draw[blue, ->] (6, 1.7) to[bend left] (8, 1.7);
-        \draw[green, ->] (6, 2.3) to[bend right] (8, 2.3);
+        \draw[mygreen, ->] (6, 2.3) to[bend right] (8, 2.3);
     \end{tikzpicture}
 \end{center}
 
@@ -2233,19 +2238,19 @@ In the example above, the nullclines are given by
             \addplot[name path=y-dot, red, ultra thick] plot coordinates {(2, 0) (0, 2)};
 
             \fill [name intersections={of=x0 and y0, total=\t}]
-            \foreach \s in {1,...,\t}{(intersection-\s) node[green] {$\bullet$}};
+            \foreach \s in {1,...,\t}{(intersection-\s) node[mygreen] {$\bullet$}};
 
             \fill [name intersections={of=x0 and x-dot, total=\t}]
-            \foreach \s in {1,...,\t}{(intersection-\s) node[green] {$\bullet$}};
+            \foreach \s in {1,...,\t}{(intersection-\s) node[mygreen] {$\bullet$}};
 
             \fill [name intersections={of=x0 and y-dot, total=\t}]
-            \foreach \s in {1,...,\t}{(intersection-\s) node[green] {$\bullet$}};
+            \foreach \s in {1,...,\t}{(intersection-\s) node[mygreen] {$\bullet$}};
 
             \fill [name intersections={of=y0 and y-dot, total=\t}]
-            \foreach \s in {1,...,\t}{(intersection-\s) node[green] {$\bullet$}};
+            \foreach \s in {1,...,\t}{(intersection-\s) node[mygreen] {$\bullet$}};
 
             \fill [name intersections={of=x-dot and y-dot, total=\t}]
-            \foreach \s in {1,...,\t}{(intersection-\s) node[green] {$\bullet$}};
+            \foreach \s in {1,...,\t}{(intersection-\s) node[mygreen] {$\bullet$}};
 
             \addplot3[-stealth] [quiver={
                         u={x*(3-x-2*y)/sqrt(x^2+(3-x-2*y)^2)},
@@ -2414,14 +2419,14 @@ We know
                           view = {0}{90}
                       ]
 
-                      \draw[green, ->] (2, 1) -- ++(0.5, 0.5) node[above right, scale=0.75] {$\nabla f(x_*, y_*, \mu_*)$};
+                      \draw[mygreen, ->] (2, 1) -- ++(0.5, 0.5) node[above right, scale=0.75] {$\nabla f(x_*, y_*, \mu_*)$};
                       \draw[blue, ->] (2, 1) -- ++(-0.5, 0.5) node[above left, scale=0.75] {$\nabla g(x_*, y_*, \mu_*)$};
 
                       \draw[blue] (2, 1) -- ++(-1, -0.5);
                       \draw[blue] (2, 1) -- ++(1, 0.5) node[below right, scale=0.75] {nullcline g};
 
-                      \draw[green] (2, 1) -- ++(1, -0.5) node[right, scale=0.75] {nullcline f};
-                      \draw[green] (2, 1) -- ++(-1, 0.5);
+                      \draw[mygreen] (2, 1) -- ++(1, -0.5) node[right, scale=0.75] {nullcline f};
+                      \draw[mygreen] (2, 1) -- ++(-1, 0.5);
 
                       \node[red] at (2, 1) {$\bullet$} node[right, red] at (2, 1) {$(x_*, y_*)$};
                   \end{axis}
@@ -2449,10 +2454,10 @@ We know
                           view = {0}{90}
                       ]
 
-                      \draw[green, ->] (2, 1) -- ++(0, 0.5) node[above, scale=0.75] {$\nabla f(x_*, y_*, \mu_*)$};
+                      \draw[mygreen, ->] (2, 1) -- ++(0, 0.5) node[above, scale=0.75] {$\nabla f(x_*, y_*, \mu_*)$};
                       \draw[blue, ->] (2, 1) -- ++(0, -0.5) node[above left, scale=0.75] {$\nabla g(x_*, y_*, \mu_*)$};
 
-                      \addplot[green] {1/4*(x-2)^2 + 1} node[below right, scale=0.75] {nullcline f};
+                      \addplot[mygreen] {1/4*(x-2)^2 + 1} node[below right, scale=0.75] {nullcline f};
                       \addplot[blue, domain=0.5:3.5] {1/2*(x-2)^2 + 1} node[right, scale=0.75] {nullcline g};
 
 
@@ -2482,7 +2487,7 @@ We know
                           view = {0}{90}
                       ]
 
-                      \addplot[green] {1/4*(x-2)^2 + 0.5};
+                      \addplot[mygreen] {1/4*(x-2)^2 + 0.5};
                       \addplot[blue, domain=0.5:3.5] {1/2*(x-2)^2 + 0.7};
 
                       \node at (2, -0.5) {no equilibria};
@@ -2505,7 +2510,7 @@ We know
                           view = {0}{90}
                       ]
 
-                      \addplot[green, name path=g] {1/4*(x-2)^2 + 0.7};
+                      \addplot[teal!50!mygreen, name path=g] {1/4*(x-2)^2 + 0.7};
                       \addplot[blue, domain=0.5:3.5, name path=b] {1/2*(x-2)^2 + 0.4};
 
                       \fill [name intersections={of=g and b, total=\t}]
@@ -2584,7 +2589,7 @@ We can plot:
                 view = {0}{90}
             ]
 
-            \addplot[name path=y0, green] {4/(1 + e^(4-x)) - 0.07} node[right] {nullcline $g$};
+            \addplot[name path=y0, mygreen] {4/(1 + e^(4-x)) - 0.07} node[right] {nullcline $g$};
 
             \addplot[name path=x1, blue, domain=0:8] {0.6*x} node[above left] {nullcline $f$ for $a = a_*$};
             \addplot[name path=x2, blue, domain=0:1] {4*x} node[left] {nullcline $f$ for $a \gg 1$};
@@ -2600,8 +2605,850 @@ We can plot:
 
 Our next step is to fix $a < a_*$ and determine stability.
 
+\section{Feb 19}
 
-\end{document}
+\tbf{Recall:} Last time we began studying the system
+\[\begin{cases}
+        \dot x = -ax + y \\
+        \dot y = \frac{x^2}{1 + x^2} - \frac{y}{2}
+    \end{cases}, \quad a > 0\]
+which models the interaction between a gene and a protein.
+
+Last time, we found nullclines $y = ax$ and $y = \frac{2x^2}{1 + x^2}$. Plotting for different values of $a$, we found a saddle node bifurcation at $a = a_*$.
+
+Today, we will focus on the case $a < a_*$:
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.4\textwidth,
+                axis lines=middle,
+                no markers,
+                domain=0:6,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                ymin=0, ymax=2.5,
+                xmin= 0, xmax=6,
+                view = {0}{90}
+            ]
+
+            \addplot[name path=y0, mygreen] {(2*x^2)/(1 + x^2)} node[right] {$\dot y = 0$};
+
+            \addplot[name path=x3, domain=0:4.5, blue] {1/2*x} node[right] {$\dot x = 0$};
+
+            \fill [name intersections={of=x3 and y0, total=\t}]
+            \foreach \s in {1,...,\t}{(intersection-\s) node[red] {$\bullet$}};
+
+            \addplot3[-stealth, quiver={
+                        u={(-0.5*x + y)/sqrt(x^2 + (y - 0.5*x)^2)},
+                        v={((x^2)/(1 + x^2) - y/2)/sqrt(x^2 + (y - 0.5*x)^2)},
+                        scale arrows=0.1
+                    },
+                domain=0:6,
+                domain y=0:2.5,
+                samples=15] {0};
+
+            \node at (axis description cs: 0.5, -0.1) {$0 < a < a_*$};
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+which gives the following phase portrait for $a$ fixed:
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                domain=0:4,
+                ymin=0, ymax=4,
+                xmin= 0, xmax=4,
+                view = {0}{90}
+            ]
+
+            \node[red] (p) at (3, 3) {$\bullet$};
+            \node[red] (o) at (0, 0) {$\bullet$};
+            \node[red] (q) at (0.5, 0.5) {$\bullet$};
+
+            \draw[marking along={0.5}{<}] (p) to[bend right] ++(0.5, 0.5);
+            \draw[marking along={0.5}{<}] (p) to[bend left] ++(0.5, 0.7);
+            \draw[marking along={0.5}{<}] (p) to[bend right] ++(1, -2);
+            \draw[marking along={0.5}{<}] (p) to[bend left] ++(-2, 0.5);
+            \draw[marking along={0.5}{<}] (p) to[bend left] ++(-1, 1);
+            \draw[marking along={0.5}{<}] (p) to[bend right] ++(0.6, -2.5);
 
 
+            \draw[marking along] (q) to (p);
+            \draw[marking along] (q) to[bend right] (p);
+            \draw[marking along] (q) to[bend left] (p);
+
+            \draw[->] (o) to[bend right] (q);
+            \draw[->] (o) to[bend left] (q);
+            \draw[marking along={0.5}{<}] (q) to[bend left] ++(-0.2, 2);
+            \draw[marking along={0.5}{<}] (q) to[bend right] ++(1, -0.2);
+
+
+
+
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+and bifurcation diagram:
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={},
+                ylabel={},
+                domain=0:4,
+                ymin=0, ymax=2,
+                xmin= 0, xmax=2,
+                view = {0}{90}
+            ]
+            \addplot[name path=c1, blue, domain=1:2] ({-(x-1)^2+1}, {x});
+            \addplot[name path=c2, blue, dashed, domain=0:1] ({-(x-1)^2+1}, {x});
+
+            \node at (1, 1) {$\bullet$};
+            \node at (1, 1) [below right] {saddle node};
+
+            \addplot[red, thick, domain=0.25:1.75] {0} node[above] {stable};
+
+            \addplot[name path=vert, mygreen, domain=0:2] ({0.4}, {x});
+
+            \fill [name intersections={of=c1 and vert, total=\t}]
+            \foreach \s in {1,...,\t}{(intersection-\s) node[mygreen] {$\bullet$} node[mygreen, right] {saddle}};
+
+            \fill [name intersections={of=c2 and vert, total=\t}]
+            \foreach \s in {1,...,\t}{(intersection-\s) node[mygreen] {$\bullet$} node[mygreen, right] {saddle}};
+
+            \node at (axis description cs: 0.5, -0.1) {norm of $(x, y)$};
+
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\subsection{Implicit Function Theorem}
+\begin{proposition}
+    \textbf{Theorem (IFT):} Consider $f: \R^2 \to \R$, $(x, y) \mapsto f(x, y)$ with $f \in C^k$ for some $k\geq 1$. Assume $f(x_*, y_*) = 0$.
+
+    We then have:
+    \begin{enumerate}
+        \item If $f_x(x_*, y_*) \neq 0$, then there $\exists \delta > 0$ and $\exists! g: (y_* - \delta, y_* + \delta) \to \R$ with $x_* = g(y_*)$ so that $f(x, y) = 0$ for $(x, y) \in (x_* - \delta, x_* + \delta) \times (y_* - \delta, y_* + \delta)$ iff $x = g(y)$.
+        \item If $f_y(x_*, y_*) \neq 0$, then there $\exists \delta > 0$ and $\exists! h: (x_* - \delta, x_* + \delta) \to \R$ with $y_* = h(x_*)$ so that $f(x, y) = 0$ for $(x, y) \in (x_* - \delta, x_* + \delta) \times (y_* - \delta, y_* + \delta)$ iff $y = h(x)$.
+        \item $g$ and $h$ are $C^k$ functions.
+    \end{enumerate}
+\end{proposition}
+
+We can graph these two cases:
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick={0.25, 0.5, 0.75},
+                ytick={0.25, 0.5, 0.75},
+                xticklabels={$x_* - \delta$, \textcolor{red}{$x_*$}, $x_* + \delta$},
+                yticklabels={$y_* - \delta$,\textcolor{red}{ $y_*$}, $y_* + \delta$},
+                clip=false,
+                xlabel={},
+                ylabel={},
+                domain=0:4,
+                ymin=0, ymax=1,
+                xmin= 0, xmax=1,
+                view = {0}{90}
+            ]
+
+            \draw[dashed, mygreen] (0.25, 0.25) -- (0.75, 0.25) -- (0.75, 0.75) -- (0.25, 0.75) -- cycle;
+
+            \node[red] at (0.5, 0.5) {$\bullet$};
+            \draw[->, red] (0.5, 0.5) -- ++(0.5, 0) node[right] {$\nabla f(x_*, y_*)$};
+
+            \addplot[blue, domain=0.25:0.75] ({(x-0.5)^2+0.5}, {x});
+
+            \node at (axis description cs: 0.5, -0.3) {$f_x(x_*, y_*) \neq 0$};
+        \end{axis}
+    \end{tikzpicture}
+    \hspace{1cm}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick={0.25, 0.5, 0.75},
+                ytick={0.25, 0.5, 0.75},
+                xticklabels={$x_* - \delta$, \textcolor{red}{$x_*$}, $x_* + \delta$},
+                yticklabels={$y_* - \delta$, \textcolor{red}{$y_*$}, $y_* + \delta$},
+                clip=false,
+                xlabel={},
+                ylabel={},
+                domain=0:4,
+                ymin=0, ymax=1,
+                xmin= 0, xmax=1,
+                view = {0}{90}
+            ]
+
+            \draw[dashed, mygreen] (0.25, 0.25) -- (0.75, 0.25) -- (0.75, 0.75) -- (0.25, 0.75) -- cycle;
+
+            \node[red] at (0.5, 0.5) {$\bullet$};
+            \draw[->, red] (0.5, 0.5) -- ++(-0.5, 0.5) node[right] {$\nabla f(x_*, y_*)$};
+
+            \draw[blue] (0.25, 0.25) to[out=0, in=-120] (0.5, 0.5);
+            \draw[blue, bend right] (0.5, 0.5) to[out=30, in=180] (0.75, 0.75);
+
+
+            \node at (axis description cs: 0.5, -0.3) {$f_y(x_*, y_*) \neq 0$};
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\tbf{Example:} Find all zeros of
+\[f(x, y) = y + y^2 e^x + (\sin x)^2 - xy\]
+near $(x_*, y_*) = (0, 0)$.
+
+\emph{Remark:} This is somewhat of a bad example because $f$ is quadratic in $y$ so we can solve for $y$ explicitly. However, we will use the IFT to find the same result.
+
+\begin{enumerate}
+    \item Check conditions
+
+          \begin{itemize}
+              \item $f$ can be differentiated as often as we need \quad \textcolor{mygreen}{$\checkmark$}
+              \item $f(0, 0) = 0$ \quad \textcolor{mygreen}{$\checkmark$}
+              \item $f_x(0, 0) = (y^2 e^x + 2\sin x \cos x - y) \bigg\vert_{(0, 0)} = 0$ \quad \textcolor{red}{$\times$}
+              \item $f_y(0, 0) = 1 + 2y e^x - x \bigg\vert_{(0, 0)} \neq 0$ \quad \textcolor{mygreen}{$\checkmark$}
+          \end{itemize}
+
+    \item Hence we can apply IFT Part 2 and conclude:
+          \begin{itemize}
+              \item There exists $\delta > 0$ and $g: (- \delta, \delta) \to \R$ with $g(0) = 0$ so that $f(x, y) = 0$ for $\abs{x}, \abs{y} < \delta$ iff $y = g(x)$ and $g \in C^{\infty}$
+          \end{itemize}
+
+    \item We can Taylor Expand $g$:
+          \begin{itemize}
+              \item $g(x) = g(0) + g'(0)x + O(x^2) = g'(0)x + O(x^2) = O(x)$
+              \item With a little more work, we can show that $g(x) = -x^2 + O(x^3)$
+          \end{itemize}
+
+          \begin{center}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$x$},
+                          ylabel={$y$},
+                          domain=-1:1,
+                          ymin=-2, ymax=2,
+                          xmin= -2, xmax=2,
+                          view = {0}{90}
+                      ]
+                      \addplot[blue] {-x^2};
+                      \node[red] at (0, 0) {$\bullet$};
+                  \end{axis}
+              \end{tikzpicture}
+          \end{center}
+\end{enumerate}
+
+\tbf{Remark:} In the above example, we found $f_x(0, 0) \neq 0$. This does \emph{not} mean a function satisfying $x = g(y)$ does not exist. It just means that the IFT does not apply.
+
+\tbf{Example:} Find all zeros of $f(x, y) = x^2 - y^2$ near $(0, 0)$.
+\begin{enumerate}
+    \item Check conditions:
+          \begin{itemize}
+              \item $f \in C^{\infty}$ \quad \textcolor{mygreen}{$\checkmark$}
+              \item $f(0, 0) = 0$ \quad \textcolor{mygreen}{$\checkmark$}
+              \item $f_x(0, 0) = 2x \bigg\vert_{(0, 0)} = 0$ \quad \textcolor{red}{$\times$}
+              \item $f_y(0, 0) = -2y \bigg\vert_{(0, 0)} = 0$ \quad \textcolor{red}{$\times$}
+          \end{itemize}
+
+          But now we can't apply the IFT. However, we can still solve this problem by hand. We have $x^2 = y^2$ so $\abs{x} = \abs{y}$:
+          \begin{center}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$x$},
+                          ylabel={$y$},
+                          domain=-1:1,
+                          ymin=-1, ymax=1,
+                          xmin= -1, xmax=1,
+                          view = {0}{90}
+                      ]
+                      \addplot[blue] {x} node[right]{$f=0$};
+                      \addplot[blue] {-x} node[right]{$f=0$};
+                      \node[red] at (0, 0) {$\bullet$};
+                  \end{axis}
+              \end{tikzpicture}
+          \end{center}
+
+          And it makes sense that the IFT does not apply here as any map satisfying this graph could not be a function.
+\end{enumerate}
+
+\tbf{Example (Intuition):} Take $ax + by = 0$. If we want to solve for $x$,
+\[x= -\frac{b}{a}y \implies a \neq 0 \implies a = f_x(0, 0) \neq 0\]
+which can help keep the assumptions versus conclusions straight.
+
+\section{Feb 21}
+\subsection{Implicit Function Theorem (Examples)}
+
+\tbf{Example:} Find the zeros of $f(x, y) = e^x - 1 + y\cos x + \sin^2 y$.
+
+As always, we first check the conditions:
+\begin{itemize}
+    \item $f \in C^{\infty}$ \quad \textcolor{mygreen}{$\checkmark$}
+    \item By inspection, $f(0, 0) = 0$. \quad \textcolor{mygreen}{$\checkmark$}
+    \item $f_x(0, 0) = [e^x - y\sin x]_{(0, 0)} = 1 \neq 0$ \quad \textcolor{mygreen}{$\checkmark$}
+    \item $f_y(0, 0) = [\cos x + 2\sin y \cos y]_{(0, 0)} = 1 \neq 0$ \quad \textcolor{mygreen}{$\checkmark$}
+\end{itemize}
+
+so we can apply IFT in both variables.
+
+Specifically, $f(x, y) = 0$ iff $x = g_1(y)$ and $y = g_2(x)$ for some $g_1, g_2 \in C^{\infty}$.
+
+Now we can make a few observations that will help us plot:
+\begin{itemize}
+    \item $f(0, 0) = 0$
+    \item $\nabla f(0, 0) = (1, 1) \perp \{f = 0\}$ which gives us a tangent line at $(0, 0)$. And in fact, this gives the curve of zeros for both $x$ and $y$.
+\end{itemize}
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                domain=0:4,
+                ymin=-2, ymax=2,
+                xmin= -2, xmax=2,
+                view = {0}{90}
+            ]
+            \addplot[domain=-1:1, blue] {-sin(deg(x))} node[right] {$\begin{subarray}{c}
+                        x = g_1(y)\\
+                        y = g_2(x)
+                    \end{subarray}$};
+
+            \node[red] at (0,0) {$\bullet$};
+            \node[blue] at (axis description cs: 0.5, -0.3) {$\{(x, y): f(x, y) = 0\}$};
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\tbf{Example:} Find all zeros of $f(x, y) = x^3 - y^3$ near $(0, 0)$.
+
+We check the conditions:
+\begin{itemize}
+    \item $f \in C^{\infty}$
+    \item $f(0, 0) = 0$
+    \item $f_x(0, 0) = 0$
+    \item $f_y(0, 0) = 0$
+\end{itemize}
+so the IFT does not apply.
+
+But we can still solve this by hand!
+\[f(x, y) = x^3 - y^3 \iff x^3 = y^3 \overset{*}{\iff} x = y\]
+(note that the $(*)$ equality works because there is no ambiguity in signs).
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                domain=-2:2,
+                ymin=-2, ymax=2,
+                xmin= -2, xmax=2,
+                view = {0}{90}
+            ]
+            \addplot[blue] {x};
+            \node[red] at (0,0) {$\bullet$};
+            \node[blue] at (axis description cs: 0.5, -0.3) {$\{(x, y): x = y\} = \{(x, y): f(x, y) = 0\}$};
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\subsection{Applications}
+
+\tbf{Topography and Intuition:} Imagine a mountain range with two peaks. Let $f(x, y)$ represent a point on the mountain range. In between the two peaks, we have a saddle point. We can project the level sets of the height function down to the $xy$-plane to get a contour map.
+
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{Images/FEB21 - contours.png}
+\end{center}
+
+In this case, the IFT applies everywhere except valleys, hills, and saddles -- $\nabla f(x, y) = 0$.
+
+\tbf{Nullclines:} Consider a nullcline $\{(x, y): f(x, y) = 0\}$
+
+If $f(x_*, y_*) = 0$ and $\nabla f(x_*, y_*) \neq 0$, then as we have seen, the nullcline is (locally) a curve.
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                domain=-2:2,
+                ymin=0, ymax=2,
+                xmin=0, xmax=2,
+                view = {0}{90}
+            ]
+            \addplot[blue, domain=0.5:1.5] {sin(deg(2*x-2))+1} node[right] {$\{f = 0\}$ nullcline};
+
+            \node[red] at (1, 1) {$\bullet$};
+            \node[red, right] at (1, 1) {$(x_*, y_*)$};
+
+            \draw[->, red] (1, 1) -- ++(-0.5, 0.5) node[above] {$\nabla f(x_*, y_*)$};
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+and the IFT makes this rigorous:
+\[\nabla f(x_*, y_*) = \begin{pmatrix}
+        f_x(x_*, y_*) \\
+        f_y(x_*, y_*)
+    \end{pmatrix} \neq 0\]
+so we really have the curve as the IFT applies.
+
+\tbf{Hyperbolic Equilibria:} Consider a system $\dot u = f(u, \mu)$ with $u, \mu \in \R$ and
+\begin{itemize}
+    \item $f(u_*, \mu_*) = 0$, i.e. $u_*$ is an equilibrium for $\mu = \mu_*$
+    \item $f_u(u_*, \mu_*) \neq 0$, i.e. $u_*$ is hyperbolic
+\end{itemize}
+
+Here, the IFT guarantees that $\exists g \in C^k$ with $g(\mu_*) = u_*$ so that $f(u, \mu) = 0$ for $(u, \mu)$ near $(u_*, \mu_*)$ iff $u = g(\mu)$.
+
+In this case, we say ``$u_*$ persists for $\mu$ near $\mu_*$''
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                domain=0:4,
+                ymin=0, ymax=4,
+                xmin=0, xmax=4,
+                view = {0}{90}
+            ]
+            \addplot[name path=b, blue, domain=0.5:3.5] {sin(deg(x)) + 2} node[right] {$u = g(\mu)$ consists of equilibria};
+
+            \addplot[name path=x1, dashed] ({1}, {x});
+            \addplot[name path=x2, dashed] ({2}, {x});
+            \addplot[name path=x3, dashed] ({3}, {x});
+
+            \fill [name intersections={of=b and x1, total=\t}]
+            \foreach \s in {1,...,\t}{(intersection-\s) node[red] {$\bullet$}};
+
+            \fill [name intersections={of=b and x2, total=\t}]
+            \foreach \s in {1,...,\t}{(intersection-\s) node[red] {$\bullet$}};
+
+            \fill [name intersections={of=b and x3, total=\t}]
+            \foreach \s in {1,...,\t}{(intersection-\s) node[red] {$\bullet$}};
+
+            \pgfplotsinvokeforeach{1, 2, 3} {
+                \node[red] at (#1, 4) {\rotatebox{180}{$\wedge$}};
+                \node[red] at (#1, 1) {$\wedge$};
+            }
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\subsection{Multidimensional IFT}
+\begin{proposition}
+    \textbf{Theorem:} Let $f: \R^n \times \R^m \to \R^n$ in $C^k$ for some $u \geq 1$. Assume $f(x_*, y_*) = 0$.
+
+    If the Jacobian
+    \[f_x(x_*, y_*) = \begin{pmatrix}
+            \frac{\partial f_i}{\partial x_j}
+        \end{pmatrix}_{i, j = 1:n} \in \R^{n \times n}\]
+    is invertible (so has nonzero determinant), then $\exists g: \R^m \to \R^n$ in $C^k$ with $g(y_*) = x_*$ so that $f(x, y) = 0$ for $(x, y)$ near $(x_*, y_*)$ iff $x = g(y)$.
+\end{proposition}
+
+\subsection{Periodic Orbits}
+
+\tbf{Definition:} Let $\dot u = f(u)$. A solution $u(t)$ is periodic if there is a $T> 0$ so that $u(t + T) = u(t)$ for all $t$ (and $u$ is not an equilibrium)
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw[->, mygreen,
+            marking along={0.2}{>},
+            marking along={0.4}{>},
+            marking along={0.6}{>},
+            marking along={0.8}{>}] plot[smooth, tension=1.2] coordinates {(0, 0) (1, 1.5) (2, 1) (3, 2) (4, 1) (5, 1.5) (6, 0) (5, -1.5) (2, -1) (1, -1.5) (0, 0)};
+    \end{tikzpicture}
+\end{center}
+
+In the following days, we will do the following:
+\begin{enumerate}
+    \item Index theory to exclude periodic orbits
+    \item Poincare-Bendixson Theorem and trapping regions to find large amplitude periodic orbits
+    \item Hopf bifurcation theorem to find small amplitude periodic orbits
+\end{enumerate}
+
+\tbf{Remark:} 1-2 work only in $\R^2$ but the Hopf bifurcation theorem works in $\R^n$.
+
+\tbf{Index Theory:}
+
+\begin{center}
+    \resizebox{0.3\textwidth}{!}{
+        \begin{tikzpicture}
+            \node at (0, 0) {\includegraphics[width=0.5\textwidth]{Images/FEB21 - spiral.png}};
+            \node[blue, ultra thick] at (1.2, 0.1) {$\wedge$};
+
+            \node[red, ultra thick] at (4, 0) {$\wedge$};
+            \node[red, ultra thick] at (-4.25, 0) {\rotatebox{180}{$\wedge$}};
+
+            \node[blue] at (0, 2.5) {$<$};
+            \node[blue] at (-0.1, -2.85) {$>$};
+
+        \end{tikzpicture}
+    }
+\end{center}
+
+We conjecture that the interior of the periodic orbit contains an equilibrium (most likely an attractor)
+
+\section{Feb 24}
+\subsection{Index Theory}
+
+\tbf{Definition:} Pick a continuous closed curve without self-intersections that does not pass through any equilibria. We call this curve a \emph{simple closed curve} or \emph{simple loop}
+
+\tbf{Example:} Let $\Gamma$ be a simple closed loop.
+
+\begin{center}
+    \includegraphics[width=0.4\textwidth]{Images/FEB24 - Index def.png}
+\end{center}
+
+Starting at some vector, say $(1, 0)$, let $\phi_0$ represent the angle to the next vector along the curve. The number of full rotations we make around the curve is the \emph{index} of the curve.
+
+Specifically,
+\begin{enumerate}
+    \item Pick any $u_0 \in \Gamma$ and compute the angle $\phi_0$ of $F(u_0)$ with $(1, 0)$
+    \item Traverse the curve $\Gamma$ counterclockwise and trace the angle $\phi$ of $F(u)$ with $(1, 0)$ at each $u \in \Gamma$.
+    \item $\phi$ will vary continuously as $u$ traverses $\Gamma$ since $\Gamma$ and $F$ are continuous.
+    \item We traverse $\Gamma$ exactly once and record the final angle $\phi_1$ upon returning to $u_0$.
+    \item \emph{Key Observation:} $\phi_1 = \phi_0 + 2\pi n$ for $n \in \Z$. This $n$ is the index.
+\end{enumerate}
+
+\tbf{Definition:} The \emph{index} of the simple closed curve $\Gamma$ (for the vector field $F$) is given by
+\[I_{\Gamma} = \frac{\phi_1 - \phi_0}{2\pi} \in \Z\]
+which represents the number of net counterclockwise rotations of $F(u)$ as $u$ traverses $\Gamma$ once in the counterclockwise direction.
+
+\tbf{Examples:}
+\begin{enumerate}
+    \item $I_{\Gamma} = 1$
+
+          \begin{center}
+              \includegraphics[width=0.3\textwidth]{Images/FEB24 - ex1.png}
+          \end{center}
+
+    \item $I_{\Gamma} = -1$ (since the rotation is clockwise)
+
+          \begin{center}
+              \resizebox{2in}{!}{
+                  \begin{tikzpicture}
+                      \draw[blue] (0, 0) circle (1);
+
+                      \draw[gray, ->] (0:1) -- (0:1.5);
+                      \draw[gray, ->] (30:1) -- (15:1.5);
+                      \draw[gray, ->] (-30:1) -- (-15:1.5);
+
+                      \draw[gray, ->] (180:1) -- (180:1.5);
+                      \draw[gray, ->] (150:1) -- (165:1.5);
+                      \draw[gray, ->] (210:1) -- (195:1.5);
+
+                      \draw[gray, ->] (90:1) -- (90:0.5);
+                      \draw[gray, ->] (120:1) -- (150:0.75);
+                      \draw[gray, ->] (60:1) -- (30:0.75);
+
+                      \draw[gray, ->] (270:1) -- (270:0.5);
+                      \draw[gray, ->] (240:1) -- (210:0.75);
+                      \draw[gray, ->] (300:1) -- (330:0.75);
+                  \end{tikzpicture}
+              }
+          \end{center}
+
+    \item $I_{\Gamma} = 2$
+
+          \begin{center}
+              \resizebox{1.5in}{!}{
+                  \begin{tikzpicture}
+                      \draw[blue] (0, 0) circle (1);
+
+                      \draw[->, gray] (45:1) -- ++(-0.1, 0.5);
+                      \draw[->, gray] (90:1) -- ++(-0.1, -0.3);
+                      \draw[->, gray] (135:1) -- ++(0.3, -0.2);
+                      \draw[->, gray] (225:1) -- ++(0, 0.3);
+                      \draw[->, gray] (270:1) -- ++(-0.5, -0.2);
+                      \draw[->, gray] (300:1) -- ++(0.3, -0.3);
+                      \draw[->, gray] (330:1) -- ++(0.4, 0.5);
+                  \end{tikzpicture}
+              }
+          \end{center}
+
+    \item $\begin{pmatrix}
+                  \dot x \\
+                  \dot y
+              \end{pmatrix} = \begin{pmatrix}
+                  x^2 y \\
+                  x^2 - y^2
+              \end{pmatrix}$ with $\Gamma$ the unit circle.
+
+          \begin{center}
+              \resizebox{2in}{!}{
+                  \begin{tikzpicture}
+                      \draw[blue] (0, 0) circle (1);
+                      \draw[gray] (-1.5, 0) -- (1.5, 0);
+                      \draw[gray] (0, -1.5) -- (0, 1.5);
+
+                      \draw[->, red] (90:1) -- ++(0, -0.5);
+                      \draw[->, red] (45:1) -- ++(0.5, 0.3);
+                      \draw[->, red] (0:1) -- ++(0, 0.5);
+                      \draw[->, red] (-45:1) -- ++(-0.5, 0.3);
+                      \draw[->, red] (-90:1) -- ++(0, -0.5);
+                      \draw[->, red] (-135:1) -- ++(-0.5, 0);
+                      \draw[->, red] (180:1) -- ++(0, 0.5);
+                      \draw[->, red] (135:1) -- ++(0.5, 0);
+                  \end{tikzpicture}
+              }
+          \end{center}
+
+          leads to $I_{\Gamma} = 0$
+
+
+    \item In the following, $\Gamma$ is a periodic orbit of $\dot u = F(u)$ so $F(u)$ is tangent to $\Gamma$ at all points.
+
+          \begin{center}
+              \includegraphics[width=0.2\textwidth]{Images/FEB24 - ex5.png}
+          \end{center}
+
+    \item $I_{\Gamma} = 1$
+
+          \begin{center}
+              \resizebox{1.5in}{!}{
+                  \begin{tikzpicture}
+                      \draw[blue] (0, 0) circle (1);
+
+                      \foreach \x in {0, 45, ..., 315} {
+                              \draw[->, shorten >= 20pt, gray] (\x:1) -- (0, 0);
+                          }
+                  \end{tikzpicture}
+              }
+          \end{center}
+\end{enumerate}
+
+\tbf{Remark:} It is not too difficult to convince ourselves that every periodic orbit has $I_{\Gamma} = 1$.
+
+\section{Feb 26}
+
+\tbf{Recall:} For $\dot u = F(u), \; u \in \R^2$, $\Gamma$ is a \emph{simple closed loop} if it is
+\begin{itemize}
+    \item continuous
+    \item has no self-intersections
+    \item does not pass through any equilibria
+\end{itemize}
+
+Last time, we calculated the \emph{index}, $I_{\Gamma} \in \Z$, of various simple closed loops (the net number of counterclockwise rotations of $F(u)$ as $u$ traverses $\Gamma$ once in the counterclockwise direction).
+
+\begin{tbox}{\tbf{Properties of the Index:}
+        \begin{enumerate}[(i)]
+            \item If we continuously deform a simple closed loop $\Gamma$ to another simple closed loop $\tilde \Gamma$ without introducing self-intersections and without passing through equilibria during the deformation, then $I_{\Gamma} = I_{\tilde \Gamma}$.
+            \item If we deform $F$ continuously without creating any equilibria on $\Gamma$ during the deformation, then $I_{\Gamma}(F) = I_{\Gamma}(\tilde F)$.
+            \item If $\Gamma$ does not contain any equilibria in its interior, then $I_{\Gamma} = 0$.
+            \item If $\Gamma$ is a periodic orbit of $\dot u = F(u)$, then $I_{\gamma} = 1$
+            \item If we replace $F(u)$ by $-F(u)$ (e.g. reverse time), then the index stays the same.
+        \end{enumerate}}
+    \emph{Proof:}
+
+    (i) and (ii). Contradiction via continuity of $\phi_0$ and $\frac{\phi_1 - \phi_0}{2\pi} \in \Z$
+
+    (iii). Can shrink $\Gamma$ continuously to a point in its interior
+
+    (iv). Deform to a circle and then use the fact that $F(u)$ is tangent to $\Gamma$ at all points.
+
+    (v). The transformation changes each $\phi$ to $\phi + \pi$ so in the end, all $\pi$'s cancel
+
+\end{tbox}
+
+\begin{tbox}{\textbf{Theorem:} If $\Gamma$ is a periodic orbit of $\dot u = F(u)$ with $u \in \R^2$, then there exists at least one equilibrium in the interior of $\Gamma$.}
+    \emph{Proof:} Follows trivially from (iii) and (iv) above
+\end{tbox}
+
+\subsection{Competing Species Revisited}
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={},
+                ylabel={},
+                domain=-2:2,
+                ymin=0, ymax=3,
+                xmin=0, xmax=2.5,
+                view = {0}{90},
+                hide x axis,
+                hide y axis
+            ]
+            \node[red] (O) at (0, 0)  {$\bullet$};
+            \node[red] (20) at (2, 0) {$\bullet$};
+            \node[red] (02) at (0, 2) {$\bullet$};
+            \node[red] (11) at (1, 1.5) {$\bullet$};
+
+            \draw[marking along] (O) -- (11);
+            \draw[marking along={0.5}{<}] (11) -- (2, 3);
+
+            \draw[marking along] (O) -- (20);
+            \draw[marking along] (O) -- (02);
+
+            \draw[marking along] (O) to[bend left] (20);
+            \draw[marking along] (O) to[bend right] (02);
+
+            \draw[marking along] (11) -- (20);
+            \draw[marking along={0.75}{>}] (11) -- (02);
+
+            \draw[marking along={0.5}{<}] (02) -- ++(0, 1);
+            \draw[marking along={0.5}{<}] (20) -- ++(0.5, 0);
+
+            \draw[marking along] (2, 2) to[bend right] (20);
+            \draw[marking along] (1, 3) to[bend left] (02);
+
+            \draw[dashed, blue, marking along={0.25}{>}, marking along={0.75}{>}] (11) circle (0.5);
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+We know from the above that the blue dashed region is the only candidate for a periodic orbit. We will now use index theory to show that there also cannot be a periodic orbit here.
+
+\subsection{Isolated Equilibria}
+
+\tbf{Isolated Equilibrium:} For $\dot u = F(u)$, let $u_*$ be an equilibrium. We say it is \emph{isolated} if $F(u) \neq 0$ for all $u$ near $u_*$ (with $u \neq u_*$)
+
+\tbf{Definition:} Assume $u_*$ is an isolated equilibrium. Choose a simple closed loop $\Gamma$ so that its interior contains only one equilibrium, $u_*$. We define $I(u_*) = I_{\Gamma}$. (And this is well-defined by property (i))
+
+We now categorize the indices of various equilibria:
+
+\begin{center}
+    \begin{tabular}{ccc}
+        \begin{tikzpicture}
+
+            \foreach \x in {0, 72, ..., 288} {
+                    \draw[marking along] (\x:1) -- (0, 0);
+                }
+            \node[red] at (0, 0) {$\bullet$};
+
+        \end{tikzpicture}  &
+        \begin{tikzpicture}
+
+            \foreach \x in {0,  72, ..., 288} {
+                    \draw[marking along] (0, 0) -- (\x:1);
+                }
+            \node[red] at (0, 0) {$\bullet$};
+
+        \end{tikzpicture} &
+        \begin{tikzpicture}
+            \draw[marking along] (0, 0) -- (1, 0);
+            \draw[marking along] (0, 0) -- (-1, 0);
+            \draw[marking along={0.5}{<}] (0, 0) -- (0, 1);
+            \draw[marking along={0.5}{<}] (0, 0) -- (0, -1);
+
+            \node[red] at (0, 0) {$\bullet$};
+
+            \draw[marking along] (0.2, 1) to[bend right] (1, 0.2);
+            \draw[marking along] (-0.2, 1) to[bend left] (-1, 0.2);
+            \draw[marking along] (-0.2, -1) to[bend right] (-1, -0.2);
+            \draw[marking along] (0.2, -1) to[bend left] (1, -0.2);
+        \end{tikzpicture}          \\
+        Attractor                           & Repeller     & Saddle        \\
+        \begin{tikzpicture}
+            \node[red] at (0, 0) {$\bullet$};
+            \draw[blue] (0, 0) circle (1);
+
+            \foreach \x in {0, 45,..., 315} {
+                    \draw[shorten >= 20pt, gray, ->] (\x:1) -- (0, 0);
+                }
+        \end{tikzpicture}   &
+        \begin{tikzpicture}
+            \node[red] at (0, 0) {$\bullet$};
+            \draw[blue] (0, 0) circle (0.8);
+
+            \foreach \x in {0, 45, ..., 315} {
+                    \draw[gray, ->] (\x:0.8) -- (\x:1.2);
+                }
+        \end{tikzpicture}  &
+        \begin{tikzpicture}
+            \node[red] at (0, 0) {$\bullet$};
+            \draw[blue] (0, 0) circle (1);
+
+            \draw[gray, ->] (0:1) -- (0:1.5);
+            \draw[gray, ->] (30:1) -- (15:1.5);
+            \draw[gray, ->] (-30:1) -- (-15:1.5);
+
+            \draw[gray, ->] (180:1) -- (180:1.5);
+            \draw[gray, ->] (150:1) -- (165:1.5);
+            \draw[gray, ->] (210:1) -- (195:1.5);
+
+            \draw[gray, ->] (90:1) -- (90:0.5);
+            \draw[gray, ->] (120:1) -- (150:0.75);
+            \draw[gray, ->] (60:1) -- (30:0.75);
+
+            \draw[gray, ->] (270:1) -- (270:0.5);
+            \draw[gray, ->] (240:1) -- (210:0.75);
+            \draw[gray, ->] (300:1) -- (330:0.75);
+
+        \end{tikzpicture}                              \\
+        $I(u_*) = I_{\Gamma} = 1$           & $I(u_*) = 1$ & $I(u_*) = -1$
+    \end{tabular}
+\end{center}
+
+\tbf{Consequence:} If $\Gamma$ is a periodic orbit that contains a single equilibrium $u_*$ in its interior, then $u_*$ cannot be a saddle ($I(u_*) = -1$ but $I_{\Gamma} = 1$)
+\end{document}end{tikzpicture}\hspace{1cm}
+\begin{tikzpicture}
+    % saddle (ex 2)
+\end{tikzpicture}
 
