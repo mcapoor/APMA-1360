@@ -36,6 +36,8 @@
 \pgfplotsset{compat=1.18}
 \usetikzlibrary{intersections, calc, decorations.markings}
 \usepgfplotslibrary{polar}
+\usepgfplotslibrary{fillbetween}
+
 \tikzset{
     marking along/.style n args={2}{
         decoration={
@@ -46,6 +48,10 @@
         },
     marking along/.default={0.5}{>}
 }
+
+\usetikzlibrary{external}
+\tikzexternalize
+\tikzsetexternalprefix{figures/}
 
 \newcommand{\ans}[1]{\boxed{\text{#1}}}
 \newcommand{\vecs}[1]{\langle #1\rangle}
@@ -89,6 +95,7 @@
 \renewcommand{\bar}[1]{\overline{#1}}
 \newcommand{\overcirc}[1]{\overset{\circ}{#1}}
 \newcommand{\diam}{\text{diam }}
+\newcommand{\tr}{\text{tr}\,}
 
 \renewcommand{\Re}{\text{Re}\,}
 \renewcommand{\Im}{\text{Im}\,}
@@ -99,6 +106,8 @@
 \usepackage{tcolorbox}
 \tcbuselibrary{breakable, skins}
 \tcbset{enhanced}
+\tcbset{shield externalize}
+
 \newenvironment{tbox}[2][gray]{
     \begin{tcolorbox}[
         parbox=false,
@@ -2950,6 +2959,8 @@ Now we can make a few observations that will help us plot:
                 xmin= -2, xmax=2,
                 view = {0}{90}
             ]
+
+            \draw[red, ->] (0, 0) -- (0.75, 0.75) node[right, scale=0.75] {$\nabla f(0, 0)$};
             \addplot[domain=-1:1, blue] {-sin(deg(x))} node[right] {$\begin{subarray}{c}
                         x = g_1(y)\\
                         y = g_2(x)
@@ -3180,7 +3191,18 @@ which represents the number of net counterclockwise rotations of $F(u)$ as $u$ t
     \item $I_{\Gamma} = 1$
 
           \begin{center}
-              \includegraphics[width=0.3\textwidth]{Images/FEB24 - ex1.png}
+              \resizebox{2in}{!}{
+                  \begin{tikzpicture}
+                      \draw[blue] (0, 0) circle (1);
+
+                      \draw[gray, ->] (0:1) -- ++(0.5, 0.5);
+                      \draw[gray, ->] (30:1) -- ++(0, 0.5);
+                      \draw[gray, ->] (90:1) -- ++(-0.5, 0.3);
+                      \draw[gray, ->] (160:1) -- ++(-0.3, -0.2);
+                      \draw[gray, ->] (210:1) -- ++(0, -0.5);
+                      \draw[gray, ->] (310:1) -- ++(0.5, 0.1);
+                  \end{tikzpicture}
+              }
           \end{center}
 
     \item $I_{\Gamma} = -1$ (since the rotation is clockwise)
@@ -3260,7 +3282,25 @@ which represents the number of net counterclockwise rotations of $F(u)$ as $u$ t
     \item In the following, $\Gamma$ is a periodic orbit of $\dot u = F(u)$ so $F(u)$ is tangent to $\Gamma$ at all points.
 
           \begin{center}
-              \includegraphics[width=0.2\textwidth]{Images/FEB24 - ex5.png}
+              \resizebox{2in}{!}{
+                  \begin{tikzpicture}
+                      \draw[blue] (0, 0) circle (1);
+
+                      \node[gray, scale=0.5] at (0:1)  {$\bullet$};
+                      \node[gray, scale=0.5] at (30:1) {$\bullet$};
+                      \node[gray, scale=0.5] at (90:1) {$\bullet$};
+                      \node[gray, scale=0.5] at (160:1) {$\bullet$};
+                      \node[gray, scale=0.5] at (210:1) {$\bullet$};
+                      \node[gray, scale=0.5] at (310:1) {$\bullet$};
+
+                      \draw[gray, ->, shorten >= -20pt] (0:1) -- (0.01:1);
+                      \draw[gray, ->, shorten >= -20pt] (30:1) -- (30.01:1);
+                      \draw[gray, ->, shorten >= -20pt] (90:1) -- (90.01:1);
+                      \draw[gray, ->, shorten >= -20pt] (160:1) -- (160.01:1);
+                      \draw[gray, ->, shorten >= -20pt] (210:1) -- (210.01:1);
+                      \draw[gray, ->, shorten >= -20pt] (310:1) -- (310.01:1);
+                  \end{tikzpicture}
+              }
           \end{center}
 
     \item $I_{\Gamma} = 1$
@@ -3447,8 +3487,1120 @@ We now categorize the indices of various equilibria:
 \end{center}
 
 \tbf{Consequence:} If $\Gamma$ is a periodic orbit that contains a single equilibrium $u_*$ in its interior, then $u_*$ cannot be a saddle ($I(u_*) = -1$ but $I_{\Gamma} = 1$)
-\end{document}end{tikzpicture}\hspace{1cm}
-\begin{tikzpicture}
-    % saddle (ex 2)
-\end{tikzpicture}
 
+\section{Feb 28}
+\tbf{Recall:} Last time, we were considering the case $\dot u = F(u)$ with $u \in \R^2$ and $f \in C^1$.
+
+We proved two key results:
+
+\begin{proposition}
+    \textbf{Theorem:} Inside each periodic orbit, there is at least one equilibrium.
+\end{proposition}
+
+\begin{proposition}
+    \textbf{Theorem:} Assume $u_*$ is an isolated equilibrium (no other equilibria near $u_*$). Define
+    \begin{align*}
+        I(u_*) & = \text{index of} u_*                                                           \\
+               & = \text{index } I_{\Gamma} \text{ of a simple closed loop containing only } u_*
+    \end{align*}
+
+    Then, necessarily, $I_{\Gamma} = I(u_*) = 1$.
+\end{proposition}
+
+\tbf{Examples:} Assume $u_*$ is a hyperbolic equilibrium of $F(u)$ with Jacobian $A = F_u(u_*)$ and eigenvalues $\lambda_1, \lambda_2$.
+\begin{itemize}
+    \item If $\lambda_1, \lambda_2 < 0$ (attractor), then $I(u_*) = 1$
+    \item If $\lambda_1, \lambda_2 > 0$ (repeller), then $I(u_*) = 1$
+    \item If $\lambda_1 > 0 > \lambda_2$ (saddle), then $I(u_*) = -1$
+\end{itemize}
+
+\begin{tbox}{\textbf{Theorem:} Assume $\Gamma$ is a simple closed loop that encircles exactly $n$ equilibria $u_1, \dots, u_n$. Then
+        \[I(\Gamma) = \sum_{j=1}^n I(u_j)\]}
+    \emph{Proof:}
+
+    \begin{center}
+        \begin{tikzpicture}
+            \draw[blue, marking along={0.25}{>},
+                marking along={0.75}{>}] (0, 0) circle (1);
+
+            \node[red] at (30:0.6) {$\bullet$};
+            \node[red] at (150:0.5) {$\bullet$};
+            \node[red] at (300:0.3) {$\bullet$};
+
+            \draw[->] (1.5, 0.2) -- (2.5, 0.2);
+        \end{tikzpicture}
+        \resizebox{1in}{!}{
+            \begin{tikzpicture}
+                \node[red, scale=0.75] at (30:0.6) {$\bullet$};
+                \node[red, scale=0.75] at (150:0.5) {$\bullet$};
+                \node[red, scale=0.75] at (300:0.3) {$\bullet$};
+
+                \draw[blue] (25:0.4) arc (60:370:-0.2) -- (130:0.45) node[midway, scale=0.5] {$>$};
+                \draw[blue] (130:0.4) arc (25:350:0.2)
+                -- (45:0.25) node[midway, scale=0.5] {$<$}
+                -- (330:0.2) node[midway, scale=0.5] {\rotatebox{180}{$\wedge$}};
+                \draw[blue] (330:0.2) arc (70:380:0.2) -- (25:0.4) node[midway, scale=0.5] {$\wedge$};
+            \end{tikzpicture}
+        }
+
+    \end{center}
+
+    But any contribution from one path of one of the arms is precisely cancelled out by the other path of the arm. So the net contribution is $0$.
+
+    By a theorem earlier,
+    \[I_{\Gamma} = I_{\tilde \Gamma}= \sum_{j=1}^{n} I(u_j) \]
+\end{tbox}
+
+\tbf{Consequence:} If a periodic orbit encloses exactly $n$ equilibria, then their indices must sum to $1$.
+
+\tbf{Example:} (Competing Species)
+
+If there is a periodic orbit around the saddle point, then to make the indices match, we must have another equilibrium inside the periodic orbit. But in this case, the periodic orbit must cross the $x$ or $y$ axes, which is not possible by existence and uniqueness.
+
+The only option we could not rule out on the basis of index theory was a situation like
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={},
+                ylabel={},
+                domain=-2:2,
+                ymin=0, ymax=3,
+                xmin=0, xmax=2.5,
+                view = {0}{90},
+                hide x axis,
+                hide y axis
+            ]
+            \node[red] (O) at (0, 0)  {$\bullet$};
+            \node[red] (20) at (2, 0) {$\bullet$};
+            \node[red] (02) at (0, 2) {$\bullet$};
+            \node[red] (11) at (1, 1.5) {$\bullet$};
+
+            \node[red, below of=20] {saddle};
+            \node[red, right of=11] {attractor};
+            \node[red, left of=02] {saddle};
+            \node[red, below left of=O] {repeller};
+
+            \draw[marking along] (O) -- (11);
+            \draw[marking along={0.5}{<}] (11) -- (2, 3);
+
+            \draw[marking along] (O) -- (20);
+            \draw[marking along] (O) -- (02);
+
+            \draw[marking along] (O) to[bend left] (20);
+            \draw[marking along] (O) to[bend right] (02);
+
+            \draw[marking along={0.5}{<}] (11) -- (20);
+            \draw[marking along={0.75}{<}] (11) -- (02);
+
+            \draw[marking along={0.5}{<}] (02) -- ++(0, 1);
+            \draw[marking along={0.5}{>}] (20) -- ++(0.5, 0);
+
+            \draw[marking along] (2, 2) to[bend right] (20);
+            \draw[marking along] (1, 3) to[bend left] (02);
+
+            \draw[dashed, blue, marking along={0.25}{>}, marking along={0.75}{>}] (11) circle (0.5);
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\section{March 3}
+\subsection{Poincare-Bendixson Theorem and Trapping Regions}
+
+\tbf{Remark:} The following discussion works only in $\R^2$.
+
+\begin{tbox}{\textbf{Poincare-Bendixson Theorem:} Consider $\dot u = f(u)$ with $u \in\R^2$ and $f \in C^1$. Assume $R$ is a closed, bounded subset of $\R^2$ so that
+        \begin{itemize}
+            \item $R$ does not contain any equilibria
+            \item There exists $u(0) \in R$ so that $u(t) \in R$ for all $t \geq 0$.
+        \end{itemize}
+
+        Then $R$ contains a periodic orbit of $\dot u = F(u)$.}
+    \emph{Proof:} Not so easy
+\end{tbox}
+
+\tbf{Typical Application:} construct a trapping region $R$ shaped like an annulus
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw[fill=gray, opacity=0.5] (0, 0) ellipse (1.5 and 1);
+        \draw[fill=white] (0, 0) ellipse (0.5 and 0.5);
+
+        \node[red] at (0, 0) {$\bullet$};
+
+        \foreach \x in {0, 45, ..., 315} {
+                \draw[->] (\x:1.5 and 1) -- (\x:1.3 and 0.8);
+                \draw[->] (\x+30: 0.4) -- (\x+30:0.7);
+            }
+
+        \node[mygreen] at (210:1 and 0.7) {$\bullet$};
+        \node[mygreen, left] at (210:1 and 0.7) {$u(0)$};
+        \draw[mygreen, ->] (210:1 and 0.7) to[bend right] (320: 1 and 0.8);
+    \end{tikzpicture}
+\end{center}
+
+The strategy is to ensure $R$ is forward invariant so all solutions with $u(0) \in R$ remain in $R$ for all $t \geq 0$.
+
+\tbf{Application (Selkov 1968):} Model glycolysis in yeast cell.
+
+\[\begin{cases}
+        \dot x = -x + ay + x^2y = f(x, y) & \text{concentration of ADP}            \\
+        \dot y = b - ay - x^2y = g(x, y)  & \text{concentration of IGP (fructose)}
+    \end{cases}\]
+where $a, b > 0$ and $a$ is an enzyme concentration and $b$ is the fructose intake.
+
+First, we find equilibria:
+\[\begin{array}{rl}
+        0 & = -x + ay + x^2y \\
+        0 & = b - ay - x^2y  \\
+        \hline
+        0 & = -x + b
+    \end{array}\]
+
+
+Hence $x = b$ and we can substitute into any of these equations to get $y = \frac{b}{a + b^2}$, implying there is a unique equilibrium at $(x_*, y_*) = (b, \frac{b}{a + b^2})$.
+
+Now, we evaluate stability:
+\[J(x, y) = \begin{pmatrix}
+        f_x & f_y \\
+        g_x & g_y
+    \end{pmatrix} = \begin{pmatrix}
+        -1 + 2xy & a + x^2  \\
+        -2xy     & -a - x^2
+    \end{pmatrix}\]
+which yields
+\[J\left(b, \frac{b}{a + b^2}\right) = \begin{pmatrix}
+        -1 + \frac{2b^2}{a + b^2} & a + b^2    \\
+        -\frac{2b^2}{a + b^2}     & -(a + b^2)
+    \end{pmatrix} \]
+
+We could just calculate eigenvalues here, but there is an easier way!
+
+\tbf{Recall:} If $\lambda_1, \lambda_2$ are eigenvalues of $A$ then
+\begin{align*}
+    \det A = \lambda_1 \lambda_2 \\
+    \tr A = \lambda_1 + \lambda_2
+\end{align*}
+
+Hence, we can calculate
+\begin{align*}
+    \det J(x_*, y_*) & = \left(-1 + \frac{2b^2}{a + b^2}\right)\left(-(a + b^2)\right) + \frac{2b^2}{a + b^2}\left(a + b^2\right) \\
+                     & = a + b^2 - 2b^2 + 2b^2                                                                                    \\
+                     & = a + b^2                                                                                                  \\
+    \tr A            & = -1 + \frac{2b^2}{a + b^2} -a - b^2
+\end{align*}
+
+Since $\det J > 0$, we conclude $\Re \lambda_1$ and $\Re \lambda_2$ have the same sign (or $\lambda = \pm ic$ for $c \neq 0$) so we cannot have a saddle.
+
+Now, we consider the trace:
+\[\begin{cases}
+        \text{repeller}  & \tr J > 0 \\
+        \lambda = \pm ic & \tr J = 0 \\
+        \text{attractor} & \tr J < 0
+    \end{cases}\]
+
+Let's plot the region where
+\begin{align*}
+    \tr A & = -1 - a - b^2 + \frac{2b^2}{a + b^2} = 0 \\
+          & = -(a+b^2) - (a+b^2)^2 + 2b^2 = 0         \\
+          & = -a - b^2 - a^2 - 2ab^2 - b^4 + 2b^2 = 0 \\
+          & = a^2 + a(1 + 2b^2) + b^2(b^2 - 1) = 0    \\
+\end{align*}
+which is nicely a quadratic in $a$.
+
+Notice, for $a = 0$ we need $b = \{0, 1\}$ (assuming $b > 0$):
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick={0, 1},
+                clip=false,
+                xlabel={$a$},
+                ylabel={$b$},
+                domain=-2:2,
+                ymin=0, ymax=1.5,
+                xmin=0, xmax=1.5,
+                view = {0}{90}
+            ]
+            \node[red] at (0, 1) {$\bullet$};
+            \node[red] at (0, 0) {$\bullet$};
+
+            \addplot[fill, opacity=0.05, blue] coordinates {
+                    (0, 0) (0, 1.5) (1.5, 1.5) (1.5, 0)
+                };
+
+            \addplot[thick, fill, fill opacity=0.2, tension=1, smooth, red] coordinates {
+                    (0, 1) (1, 0.6) (0.2, 0.25) (0, 0)
+                };
+
+            \node[red] at (0.2, 1.1) {$\Omega$};
+            \node[red] at (0.4, 0.6) {repeller};
+            \node[blue] at (1, 1.25) {attractor};
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+so the region $\Omega = \{(a, b): \tr > 0\}$ is a repeller where the rest of the plane is an attractor.
+
+We can now plot nullclines:
+\begin{align*}
+    f(x, y) = 0 & \implies -x + ay + x^2y = 0 \implies y = \frac{x}{a+x^2} \\
+    g(x, y) = 0 & \implies b - ay - x^2y = 0 \implies y = \frac{b}{a+x^2}
+\end{align*}
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick={1},
+                ytick={1, 2},
+                xticklabels={$\textcolor{red}{b}$},
+                yticklabels={$\textcolor{red}{\frac{b}{a+b^2}}$, $\textcolor{blue}{\frac{b}{a}}$},
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                domain=0:2,
+                ymin=0, ymax=2.5,
+                xmin=0, xmax=2.5,
+                xlabel style={at={(current axis.right of origin)}, anchor=west},
+                ylabel style={at={(current axis.above origin)}, anchor=south},
+                view = {0}{90}
+            ]
+
+            \node[red] at (1, 1) {$\bullet$};
+
+            \addplot[name path=b, smooth, blue] coordinates {
+                    (0, 2) (1, 1) (1.7, 0.3) (2, 0.25)
+                } node[right] {$\dot y = 0$};
+
+            \addplot[name path=g, smooth, mygreen] coordinates {
+                    (0, 0) (0.25, 1.25) (0.7, 1.1) (1, 1) (1.7, 0.7) (2, 0.6)
+                } node[right] {$\dot x = 0$};
+
+
+            \draw[dotted, red] (1, 0) -- (1, 1) -- (0, 1);
+
+            \node at (0.5, 0.5) {$\begin{subarray}{align*}
+                        \dot x < 0\\
+                        \dot y > 0
+                    \end{subarray}$};
+
+            \node at (1.5, 1.5) {$\begin{subarray}{align*}
+                        \dot x > 0\\
+                        \dot y < 0
+                    \end{subarray}$};
+
+            \node at (0.2, 1.5) {$\begin{subarray}{align*}
+                        \dot x > 0\\
+                        \dot y > 0
+                    \end{subarray}$};
+
+            \node at (1.7, 0.55) {$\begin{subarray}{align*}
+                        \dot x < 0\\
+                        \dot y < 0
+                    \end{subarray}$};
+
+        \end{axis}
+    \end{tikzpicture}
+    \hspace{1cm}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick={1},
+                ytick={1, 2},
+                xticklabels={$\textcolor{red}{b}$},
+                yticklabels={$\textcolor{red}{\frac{b}{a+b^2}}$, $\textcolor{blue}{\frac{b}{a}}$},
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                domain=0:2,
+                ymin=0, ymax=2.5,
+                xmin=0, xmax=2.5,
+                xlabel style={at={(current axis.right of origin)}, anchor=west},
+                ylabel style={at={(current axis.above origin)}, anchor=south},
+                view = {0}{90}
+            ]
+
+            \node[red] at (1, 1) {$\bullet$};
+
+            \addplot[name path=b, smooth, blue] coordinates {
+                    (0, 2) (1, 1) (1.7, 0.3) (2, 0.25)
+                } node[right] {$\dot y = 0$};
+
+            \addplot[name path=g, smooth, mygreen] coordinates {
+                    (0, 0) (0.25, 1.25) (0.7, 1.1) (1, 1) (1.7, 0.7) (2, 0.6)
+                } node[right] {$\dot x = 0$};
+
+
+            \draw[dotted, red] (1, 0) -- (1, 1) -- (0, 1);
+
+            \addplot3[-stealth, samples=7,
+                domain=0:1.8, y domain=0:2.1,
+                quiver={
+                        u={(-x + 1*y + x^2*y)},
+                        v={(2 - 1*y - x^2*y)},
+                        scale arrows=0.01
+                    }
+            ]{0};
+
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+and now we can construct our trapping region.
+
+We choose a slope so that arrows cross from upper-right to lower-left.
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick={1},
+                ytick={1, 2},
+                xticklabels={$\textcolor{red}{b}$},
+                yticklabels={$\textcolor{red}{\frac{b}{a+b^2}}$, $\textcolor{blue}{\frac{b}{a}}$},
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                domain=0:2,
+                ymin=0, ymax=2.5,
+                xmin=0, xmax=2.5,
+                xlabel style={at={(current axis.right of origin)}, anchor=west},
+                ylabel style={at={(current axis.above origin)}, anchor=south},
+                view = {0}{90}
+            ]
+
+            \addplot[fill, opacity=0.1, red, thick] coordinates{
+                    (0, 0) (0, 2) (1, 2) (1.7, 0.7) (1.7, 0) (0, 0)
+                };
+
+            \node[red] at (1, 1) {$\bullet$};
+
+            \addplot[name path=b, smooth, blue] coordinates {
+                    (0, 2) (1, 1) (1.7, 0.3) (2, 0.25)
+                } node[right] {$\dot y = 0$};
+
+            \addplot[name path=g, smooth, mygreen] coordinates {
+                    (0, 0) (0.25, 1.25) (0.7, 1.1) (1, 1) (1.7, 0.7) (2, 0.6)
+                } node[right] {$\dot x = 0$};
+
+            \draw[dashed] (1, 1) circle (0.2);
+
+            \pgfplotsinvokeforeach{0, 72, ..., 288} {
+                \draw[->] ($(#1: 0.2) + (1, 1)$) -- ($(#1: 0.4) + (1, 1)$);
+            }
+
+            \draw[-stealth] (0.25, 2) -- ++(0.1, -0.2);
+            \draw[-stealth] (0.75, 2) -- ++(0.1, -0.2);
+            \draw[-stealth] (1.1, 1.8) -- ++(0.05, -0.2);
+            \draw[-stealth] (1.3, 1.5) -- ++(0.05, -0.2);
+            \draw[-stealth] (1.5, 1.1) -- ++(0, -0.2);
+            \draw[-stealth] (1.7, 0.6) -- ++(-0.1, -0.1);
+            \draw[-stealth] (1.7, 0) -- ++(-0.1, 0.2);
+            \draw[-stealth] (1.2, 0) -- ++(-0.1, 0.2);
+            \draw[-stealth] (0.7, 0) -- ++(-0.1, 0.2);
+            \draw[-stealth] (0, 1) -- ++(0.1, 0.2);
+            \draw[-stealth] (0, 1.6) -- ++(0.2, 0);
+
+            \node[red] at (0.25, 2.2) {$R$};
+
+            \draw[dotted, red] (1, 0) -- (1, 1) -- (0, 1);
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+We want $\dot x + \dot y = b - x$ so let us try slope $-1$: it suffices to show
+\[\frac{\dot y}{\dot x} < 1 \implies \dot y < -\dot x \implies \dot x + \dot y < 0 \implies b - x < 0 \implies x > b\]
+
+The region $R$ satsifes the condition of the Poicare-Bendixson theorem:
+\begin{itemize}
+    \item $R$ closed, bounded \quad \textcolor{mygreen}{$\checkmark$}
+    \item $R$ does not contain any equilibria \quad \textcolor{mygreen}{$\checkmark$}
+    \item For all $u(0) \in R$ we know that $u(t) \in R$ for $t \geq 0$ \quad \textcolor{mygreen}{$\checkmark$}
+\end{itemize}
+
+We conclude that our model has a periodic orbit in $R$ for each $(a, b) \in \Omega$
+
+\tbf{Remark:} This theorem makes no statement about the number of periodic orbits or thier stability:
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw (-2, 2) -- (-2, -2) -- (2, -2);
+
+        \draw[blue, marking along={0.25}{>}, marking along={0.75}{>}] circle (1);
+
+        \node[red] at (0, 0) {$\bullet$};
+
+        \foreach \x in {0, 120, 240}
+        \draw[mygreen, ->] (\x:0.1) to[bend left] (\x:0.5);
+
+
+        \foreach \x in {0, 72,..., 288}
+        \draw[mygreen, ->] (\x:1.6) to[bend left] (\x:1.1);
+    \end{tikzpicture}
+    \hspace{1cm}
+    \begin{tikzpicture}
+        \draw (-2, 2) -- (-2, -2) -- (2, -2);
+
+        \draw[blue, marking along={0.25}{>}, marking along={0.75}{>}] circle (1);
+        \draw[blue, marking along={0.25}{>}, marking along={0.75}{>}] circle (0.7);
+
+
+        \node[red] at (0, 0) {$\bullet$};
+
+        \foreach \x in {0, 120, 240}
+        \draw[mygreen, ->] (\x:0.1) to[bend left] (\x:0.5);
+
+
+        \foreach \x in {0, 72,..., 288}
+        \draw[mygreen, ->] (\x:1.6) to[bend left] (\x:1.1);
+    \end{tikzpicture}
+\end{center}
+
+Let us return to the region in parameter space
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick={0, 1},
+                clip=false,
+                xlabel={$a$},
+                ylabel={$b$},
+                domain=-2:2,
+                ymin=0, ymax=1.5,
+                xmin=0, xmax=1.5,
+                view = {0}{90}
+            ]
+            \node[red] at (0, 1) {$\bullet$};
+            \node[red] at (0, 0) {$\bullet$};
+
+            \addplot[fill, opacity=0.05, blue] coordinates {
+                    (0, 0) (0, 1.5) (1.5, 1.5) (1.5, 0)
+                };
+
+            \addplot[thick, fill, fill opacity=0.2, tension=1, smooth, red] coordinates {
+                    (0, 1) (1, 0.6) (0.2, 0.25) (0, 0)
+                };
+
+            \draw[mygreen, fill] (1.2, 0.6) circle (0.05) node[above] {1};
+            \draw[mygreen] (1, 0.6) circle (0.05) node[above] {2};
+            \draw[mygreen, fill] (0.8, 0.6) circle (0.05) node[above] {3};
+
+            \draw[mygreen] (1.2, 0.6) to[marking along] (1, 0.6) to[marking along] (0.8, 0.6);
+
+            \node[red] at (0.2, 1.1) {$\Omega$};
+            \node[red] at (0.4, 0.6) {repeller};
+            \node[blue] at (1, 1.25) {attractor};
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+where the eigenvalues of the Jacobian can satisfy
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$\text{Re}\, \lambda $},
+                ylabel={$\text{Im}\, \lambda$},
+                domain=-2:2,
+                ymin=-2, ymax=2,
+                xmin= -2, xmax=2,
+                view = {0}{90}
+            ]
+
+            \node[red] at (-1, 1) {$\bullet$};
+            \node[red] at (-1, -1) {$\bullet$};
+
+            \node at (axis description cs:0.5,-0.1) {$\tr A < 0$};
+            \node at (axis description cs:0.5,-0.3) {Attractor};
+        \end{axis}
+    \end{tikzpicture}
+    \hspace{1cm}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$\text{Re}\, \lambda $},
+                ylabel={$\text{Im}\, \lambda$},
+                domain=-2:2,
+                ymin=-2, ymax=2,
+                xmin= -2, xmax=2,
+                view = {0}{90}
+            ]
+
+            \node[red] at (0, 1) {$\bullet$};
+            \node[red] at (0, -1) {$\bullet$};
+
+            \node at (axis description cs:0.5,-0.1) {$\tr A = 0$};
+            \node at (axis description cs:0.5,-0.3) {};
+
+        \end{axis}
+    \end{tikzpicture}
+    \hspace{1cm}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$\text{Re}\, \lambda $},
+                ylabel={$\text{Im}\, \lambda$},
+                domain=-2:2,
+                ymin=-2, ymax=2,
+                xmin= -2, xmax=2,
+                view = {0}{90}
+            ]
+
+            \node[red] at (1, 1) {$\bullet$};
+            \node[red] at (1, -1) {$\bullet$};
+
+            \node at (axis description cs:0.5,-0.1) {$\tr A > 0$};
+            \node at (axis description cs:0.5,-0.3) {Repeller};
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\[\begin{pmatrix}
+        \dot x \\ \dot y
+    \end{pmatrix} = \begin{pmatrix}
+        0  & 1 \\
+        -1 & 0
+    \end{pmatrix} \begin{pmatrix}
+        x \\y
+    \end{pmatrix}\]
+
+We have eigenvalues $\lambda = \pm i$ and we can check
+\[\begin{cases}
+        \dot x = y \\
+        \dot y = -x
+    \end{cases} \implies \ddot x = \dot y = -x \implies \ddot x = -x \implies x(t) = \cos t\]
+and similarly,
+\[\begin{pmatrix}
+        x(t) \\
+        y(t)
+    \end{pmatrix} = \begin{pmatrix}
+        \cos t \\
+        \sin t
+    \end{pmatrix}\]
+
+So
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                domain=-2:2,
+                ymin=0, ymax=2,
+                xmin=0, xmax=2,
+                view = {0}{90},
+                axis equal
+            ]
+            \draw[blue, smooth, marking along={0.04}{<}, marking along={0.6}{<},
+                variable=\t,
+                shift={(1, 1)},
+                domain=4*pi/6:7*pi/2] plot ({\t r}: {-\t/10});
+
+            \node[red] at (1, 1) {$\bullet$};
+
+            \draw (0, 2.5) circle (0.2) node {1};
+
+        \end{axis}
+    \end{tikzpicture}
+    \hspace{1cm}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                domain=-2:2,
+                ymin=0, ymax=2,
+                xmin=0, xmax=2,
+                view = {0}{90},
+                axis equal
+            ]
+            \draw[blue, smooth, <-, samples=50, marking along={0.32}{<}, marking along={0.8}{<},
+                variable=\t,
+                shift={(1, 1)},
+                domain=3*pi-pi/6:15*pi/2] plot ({\t r}: {-\t/20});
+
+            \node[red] at (1, 1) {$\bullet$};
+            \node[blue] at (1, 2.18) {$\bullet$};
+            \node[blue] at (1, 1.85) {$\bullet$};
+
+            \draw (0, 2.5) circle (0.2) node {2};
+        \end{axis}
+    \end{tikzpicture}
+    \hspace{1cm}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                domain=-2:2,
+                ymin=0, ymax=2,
+                xmin=0, xmax=2,
+                view = {0}{90},
+                axis equal
+            ]
+            \draw[blue, smooth, samples=50, marking along={0.167}{<}, marking along={0.95}{<},
+                variable=\t,
+                shift={(1, 1)},
+                domain=5*pi-pi/6:15*pi/2] plot ({\t r}: {-\t/20});
+
+            \node[red] at (1, 1) {$\bullet$};
+
+            \draw[mygreen, shift={(1,1)}, marking along={0.25}{<}, marking along={0.75}{<}] circle (0.5);
+
+            \draw[blue, smooth, marking along={0.75}{>},
+                variable=\t,
+                shift={(1, 1)},
+                domain=pi/2:3*pi] plot ({\t r}: {-\t/25});
+
+            \draw (0, 2.5) circle (0.2) node {3};
+
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\vspace{0.5cm}
+\hspace{0.4\textwidth}
+\parbox{1.8in}{Assumption: Nonlinear terms stabilize equilibrium}
+\hspace{1cm}
+\parbox{2in}{Here we have a small amplitude periodic orbit}
+
+\section{March 10}
+\subsection{Hopf Bifurcations of Equilibria}
+\begin{enumerate}
+    \item Consider $\dot u = F(u, \mu)$ with $u \in \R^2$, $\mu \in \R$ for $F \in C^3$.
+    \item Assume that $u_*$ is an equilibrium for all $\mu$ near $\mu = \mu_*$ so that $F(u_*, \mu) = 0$ for $\mu$ near $\mu_*$
+    \item Denote the eigenvalues of $F_u(u_*, \mu)$ by $\lambda_{1, 2}(\mu)$ then we assume $\lambda_{1, 2}(\mu) = \alpha(\mu) \pm i \beta(\mu)$ where $\alpha(\mu_*) = 0$, $\frac{d\alpha}{d\mu}(\mu_*) \neq 0$ and $\beta(\mu_*) \neq 0$.
+\end{enumerate}
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$\Re \lambda$},
+                ylabel={$\Im \lambda$},
+                domain=-2:2,
+                ymin=-2, ymax=2,
+                xmin= -2, xmax=2,
+                view = {0}{90}
+            ]
+
+            \draw[blue, marking along={0.25}{>}, marking along={0.75}{>}] (-1, 0.5) -- (0, 0.6) to[out=10, in=210] (1, 1.2);
+            \node[blue] at (-1, 0.5) {$\bullet$};
+            \node[blue] at (1, 1.2) {$\bullet$};
+            \node[red] at (0, 0.6) {$\bullet$};
+
+            \draw[blue, marking along={0.25}{>}, marking along={0.75}{>}] (-1, -0.5) -- (0, -0.6) to[out=-10, in=150] (1, -1.2) node[right] {$\lambda_{1, 2}(\mu)$};
+            \node[blue] at (-1, -0.5) {$\bullet$};
+            \node[blue] at (1, -1.2) {$\bullet$};
+            \node[red] at (0, -0.6) {$\bullet$};
+
+            \node at (axis description cs: 0.5, -0.1) {(Assumes $\alpha'(\mu_*) > 0$)};
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\tbf{Remark:} the assumption that $u_*$ does not depend on $\mu$ can be relaxed as we will see.
+
+If (1)-(3) hold, then typically, one of the two scenarios will occur:
+\begin{enumerate}[(a)]
+    \item \tbf{Supercritical Hopf Bifurcation:} We have a stable periodic orbit with period $\approx \frac{2\pi}{\beta (\mu_*)}$ and amplitude $\approx \sqrt{\mu - \mu_*}$.
+
+          \begin{center}
+              \begin{tikzpicture}
+                  \draw (0, 0) -- (0, 3) node[above] {$u_2$};
+                  \draw (0, 0) -- (6, 0) node[right] {$\mu$};
+                  \draw (0, 0) -- (1, 1) node[right] {$u_1$};
+
+                  \draw[fill, fill opacity=0.2, purple] ($(6, 2) + (90:0.5 and 1)$) to[bend right] (3, 1)
+                  to[bend right] ($(6, 2) + (-90:0.5 and 1)$);
+
+                  \draw[purple, fill=white, marking along={0.25}{>}, marking along={0.75}{>}] (6, 2) ellipse (0.5 and 1);
+
+                  \draw[red, dotted] (3, 1) -- (3, 0) node[below] {$\mu_*$};
+
+                  \draw[mygreen, thick] (0.5, 2) to[out=-30, in=180] (3, 1);
+                  \draw[mygreen, dashed, thick] (3, 1) to[out=10, in=210] (6, 2);
+
+                  \node[red] at (3, 1) {$\bullet$};
+                  \node[mygreen] at (6, 2) {$\bullet$};
+
+                  \node at (axis description cs: 0.5, -0.1) {(Assumes $\alpha'(\mu_*) >0$)};
+              \end{tikzpicture}
+          \end{center}
+
+          Now these graphs we saw last week have context:
+
+          \begin{center}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$u_1$},
+                          ylabel={$u_2$},
+                          domain=-2:2,
+                          ymin=0, ymax=2,
+                          xmin=0, xmax=2,
+                          view = {0}{90},
+                          axis equal
+                      ]
+                      \draw[blue, smooth, marking along={0.04}{<}, marking along={0.6}{<},
+                          variable=\t,
+                          shift={(1, 1)},
+                          domain=4*pi/6:7*pi/2] plot ({\t r}: {-\t/10});
+
+                      \node[red] at (1, 1) {$\bullet$};
+
+                      \node at (axis description cs: 0.5, -0.1) {Attractor};
+                      \node at (axis description cs: 0.5, -0.3) {$\mu< \mu_*$};
+
+                  \end{axis}
+              \end{tikzpicture}
+              \hspace{1cm}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$u_1$},
+                          ylabel={$u_2$},
+                          domain=-2:2,
+                          ymin=0, ymax=2,
+                          xmin=0, xmax=2,
+                          view = {0}{90},
+                          axis equal
+                      ]
+                      \draw[blue, smooth, <-, samples=50, marking along={0.32}{<}, marking along={0.8}{<},
+                          variable=\t,
+                          shift={(1, 1)},
+                          domain=3*pi-pi/6:15*pi/2] plot ({\t r}: {-\t/20});
+
+                      \node[red] at (1, 1) {$\bullet$};
+                      \node[blue] at (1, 2.18) {$\bullet$};
+                      \node[blue] at (1, 1.85) {$\bullet$};
+
+                      \node at (axis description cs: 0.5, -0.1) {Attractor};
+                      \node at (axis description cs: 0.5, -0.3) {$\mu=  \mu_*$};
+                  \end{axis}
+              \end{tikzpicture}
+              \hspace{1cm}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$x$},
+                          ylabel={$u_2$},
+                          domain=-2:2,
+                          ymin=0, ymax=2,
+                          xmin=0, xmax=2,
+                          view = {0}{90},
+                          axis equal
+                      ]
+                      \draw[blue, smooth, samples=50, marking along={0.167}{<}, marking along={0.95}{<},
+                          variable=\t,
+                          shift={(1, 1)},
+                          domain=5*pi-pi/6:15*pi/2] plot ({\t r}: {-\t/20});
+
+                      \node[red] at (1, 1) {$\bullet$};
+
+                      \draw[mygreen, shift={(1,1)}, marking along={0.25}{<}, marking along={0.75}{<}] circle (0.5);
+
+                      \draw[blue, smooth, marking along={0.75}{>},
+                          variable=\t,
+                          shift={(1, 1)},
+                          domain=pi/2:3*pi] plot ({\t r}: {-\t/25});
+
+                      \node at (axis description cs: 0.5, -0.1) {Repeller + Stable Periodic};
+                      \node at (axis description cs: 0.5, -0.3) {$\mu> \mu_*$};
+                  \end{axis}
+              \end{tikzpicture}
+          \end{center}
+
+    \item \tbf{Subcritical Hopf Bifurcation:}
+
+          \begin{center}
+              \begin{tikzpicture}
+                  \draw (0, 0) -- (0, 3) node[above] {$u_2$};
+                  \draw (0, 0) -- (6, 0) node[right] {$\mu$};
+                  \draw (0, 0) -- (1, 1) node[right] {$u_1$};
+
+                  \draw[fill, fill opacity=0.2, purple] ($(0.5, 2) + (90:0.5 and 1)$) to[bend left] (3, 1)
+                  to[bend left] ($(0.5, 2) + (-90:0.5 and 1)$);
+
+                  \draw[purple, fill=white, marking along={0.25}{>}, marking along={0.75}{>}] (0.5, 2) ellipse (0.5 and 1);
+
+                  \draw[red, dotted] (3, 1) -- (3, 0) node[below] {$\mu_*$};
+
+                  \draw[mygreen, thick] (0.5, 2) to[out=-30, in=180] (3, 1);
+                  \draw[mygreen, dashed, thick] (3, 1) to[out=10, in=210] (6, 2);
+
+                  \node[red] at (3, 1) {$\bullet$};
+                  \node[mygreen] at (0.5, 2) {$\bullet$};
+
+                  \node at (3, -1) {(Assumes $\alpha'(\mu_*) >0$)};
+              \end{tikzpicture}
+          \end{center}
+
+          So now we have an unstable periodic orbit with period $\approx \frac{2\pi}{\beta (\mu_*)}$ and amplitude $\approx \sqrt{\mu - \mu_*}$.
+
+          \begin{center}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$u_1$},
+                          ylabel={$u_2$},
+                          domain=-2:2,
+                          ymin=0, ymax=2,
+                          xmin=0, xmax=2,
+                          view = {0}{90},
+                          axis equal
+                      ]
+                      \draw[blue, smooth, samples=50, marking along={0.167}{<}, marking along={0.95}{<},
+                          variable=\t,
+                          shift={(1, 1)},
+                          domain=5*pi-pi/6:15*pi/2] plot ({\t r}: {-\t/20});
+
+                      \node[red] at (1, 1) {$\bullet$};
+
+                      \draw[mygreen, shift={(1,1)}, marking along={0.25}{<}, marking along={0.75}{<}] circle (0.5);
+
+                      \draw[blue, smooth, marking along={0.75}{>},
+                          variable=\t,
+                          shift={(1, 1)},
+                          domain=pi/2:3*pi] plot ({\t r}: {-\t/25});
+
+                      \node at (axis description cs: 0.5, -0.1) {Attractor + Unstable Periodic};
+                      \node at (axis description cs: 0.5, -0.3) {$\mu< \mu_*$};
+                  \end{axis}
+              \end{tikzpicture}
+              \hspace{1cm}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$u_1$},
+                          ylabel={$u_2$},
+                          domain=-2:2,
+                          ymin=0, ymax=2,
+                          xmin=0, xmax=2,
+                          view = {0}{90},
+                          axis equal
+                      ]
+                      \draw[blue, smooth, marking along={0.04}{<}, marking along={0.6}{<},
+                          variable=\t,
+                          shift={(1, 1)},
+                          domain=4*pi/6:7*pi/2] plot ({\t r}: {-\t/10});
+
+                      \node[red] at (1, 1) {$\bullet$};
+
+                      \node at (axis description cs: 0.5, -0.1) {Repeller};
+                      \node at (axis description cs: 0.5, -0.3) {$\mu = \mu_*$};
+
+                  \end{axis}
+              \end{tikzpicture}
+              \hspace{1cm}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$u_1$},
+                          ylabel={$u_2$},
+                          domain=-2:2,
+                          ymin=0, ymax=2,
+                          xmin=0, xmax=2,
+                          view = {0}{90},
+                          axis equal
+                      ]
+                      \draw[blue, smooth, <-, samples=50, marking along={0.32}{<}, marking along={0.8}{<},
+                          variable=\t,
+                          shift={(1, 1)},
+                          domain=3*pi-pi/6:15*pi/2] plot ({\t r}: {-\t/20});
+
+                      \node[red] at (1, 1) {$\bullet$};
+                      \node[blue] at (1, 2.18) {$\bullet$};
+                      \node[blue] at (1, 1.85) {$\bullet$};
+
+                      \node at (axis description cs: 0.5, -0.1) {Repeller};
+                      \node at (axis description cs: 0.5, -0.3) {$\mu > \mu_*$};
+                  \end{axis}
+              \end{tikzpicture}
+          \end{center}
+\end{enumerate}
+
+\tbf{Remark:} Conditions (1)-(3) guarantee the emergence of periodic orbits at $\mu = \mu_*$
+
+\tbf{Paradimatic Equation:}
+\[\begin{pmatrix}
+        \dot x \\
+        \dot y
+    \end{pmatrix} = \begin{pmatrix}
+        \mu    & -\omega \\
+        \omega & \mu
+    \end{pmatrix} \begin{pmatrix}
+        x \\y
+    \end{pmatrix} - \alpha(x^2 + y^2) \begin{pmatrix}
+        x \\y
+    \end{pmatrix}, \qquad a, \omega \neq 0\]
+
+Note that
+\begin{enumerate}
+    \item the eigenvalues are $\lambda = \mu \pm i \omega$
+    \item $(x, y) = 0$ is an equilibrium for all $\mu$
+    \item $\alpha(0) = 0$, $\alpha'(0) = 1$, and $\beta(0) = \omega \neq 0$
+\end{enumerate}
+so the three conditions are satisfied.
+
+We see that $(x, y) = 0$ is an attractor for $\mu < 0$ and a repeller for $\mu > 0$.
+
+To find periodic orbits, we can use polar coordinates:
+\[r^2 = x^2 + y^2 \implies \begin{cases}
+        \tan \phi = \frac{y}{x} \\
+        x = r\cos \phi          \\
+        y = r\sin \phi
+    \end{cases} \implies \begin{cases}
+        r\dot r = x\dot x + y\dot y \\
+        \dot \phi = \frac{x\dot y - y \dot x}{r^2}
+    \end{cases}\]
+
+so that
+\[\begin{cases}
+        \dot r = \mu r - ar^3 = r(\mu - ar^2) & (\text{Pitchfork in radial direction}) \\
+        \dot \phi = \omega                    & (\phi(t) = \phi_0 + \omega t)
+    \end{cases}\]
+
+And we also know that for $a > 0$ we will be supercritical and $a < 0$ we will be subcritical:
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$\mu$},
+                ylabel={$r$},
+                domain=-2:2,
+                ymin=-2, ymax=2,
+                xmin= -2, xmax=2,
+                view = {0}{90}
+            ]
+
+            \addplot[mygreen, thick, domain=-2:0] {0};
+            \addplot[mygreen, thick, dashed, domain=0:2] {0};
+
+            \addplot[purple, thick, domain=0:1.5] ({x^2}, {x});
+            \addplot[purple, thick, domain=-1.5:0] ({x^2}, {x});
+
+            \node[red] at (0, 0) {$\bullet$};
+
+            \node at (0, -3) {$a > 0$};
+        \end{axis}
+    \end{tikzpicture}
+    \hspace{1cm}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$\mu$},
+                ylabel={$r$},
+                domain=-2:2,
+                ymin=-2, ymax=2,
+                xmin= -2, xmax=2,
+                view = {0}{90}
+            ]
+
+            \addplot[mygreen, thick, domain=-2:0] {0};
+            \addplot[mygreen, thick, dashed, domain=0:2] {0};
+
+            \addplot[purple, thick, dashed, domain=0:1.5] ({-x^2}, {x});
+            \addplot[purple, thick, dashed, domain=-1.5:0] ({-x^2}, {x});
+
+            \node[red] at (0, 0) {$\bullet$};
+
+            \node at (0, -3) {$a < 0$};
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\tbf{Remark:} It is generally quite difficult to determine analytically whether a Hopf bifurcation is supercritical or subcritical.
+\end{document}
