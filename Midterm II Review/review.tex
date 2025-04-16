@@ -1,0 +1,305 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{letterpaper, margin=0.25in}
+\usepackage{graphicx} 
+\usepackage{parskip}
+\usepackage{booktabs}
+\usepackage{array} 
+\usepackage{paralist} 
+\usepackage{verbatim}
+\usepackage{subfig}
+\usepackage{fancyhdr}
+\usepackage{sectsty}
+\usepackage[shortlabels]{enumitem}
+
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt} 
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} 
+\usepackage[titles,subfigure]{tocloft}
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} %
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{empheq}
+\usepackage{xcolor}
+\usepackage{bbm}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{tikz-cd}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{intersections, decorations.markings}
+\tikzset{
+    marking along/.style n args={2}{
+        decoration={
+                markings, 
+                mark=at position #1 with {\arrow{#2}}
+        },
+        postaction={decorate}
+        },
+    marking along/.default={0.5}{>}
+    wavy/.style={
+        decorate,decoration={coil,aspect=0}
+     },
+    two marks/.style n args={1}{
+        decoration={
+            markings,
+            mark=at position 0.25 with {\arrow{#1}},
+            mark=at position 0.75 with {\arrow{#1}}
+         },
+         postaction={decorate}
+    }
+}
+
+\colorlet{mygreen}{green!50!teal}
+
+\newcommand{\ans}[1]{\boxed{\text{#1}}}
+\newcommand{\vecs}[1]{\langle #1\rangle}
+\renewcommand{\hat}[1]{\widehat{#1}}
+
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+
+\newcommand{\ind}{\mathbbm{1}}
+\newcommand{\qed}{\quad \blacksquare}
+
+\newcommand{\brak}[1]{\left\langle #1 \right\rangle}
+\newcommand{\bra}[1]{\left\langle #1 \right\vert}
+\newcommand{\ket}[1]{\left\vert #1 \right\rangle}
+
+\newcommand{\abs}[1]{\left\vert #1 \right\vert}
+\newcommand{\mfX}{\mathfrak{X}}
+\newcommand{\ep}{\varepsilon}
+
+\newcommand{\Ec}{\mathcal{E}}
+\newcommand{\Nc}{\mathcal{N}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Cc}{\mathcal{C}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\X}{\chi}
+\renewcommand{\L}{\mathcal{L}}
+
+\newcommand{\sub}{\subseteq}
+\newcommand{\st}{\text{ s.t. }}
+\newcommand{\card}{\text{card }}
+\renewcommand{\div}{\vspace*{10pt}\hrule\vspace*{10pt}}
+\newcommand{\surj}{\twoheadrightarrow}
+\newcommand{\inj}{\hookrightarrow}
+\newcommand{\biject}{\hookrightarrow \hspace{-8pt} \rightarrow}
+\renewcommand{\bar}[1]{\overline{#1}}
+\newcommand{\overcirc}[1]{\overset{\circ}{#1}}
+\newcommand{\diam}{\text{diam }}
+\newcommand{\iid}{\overset{	ext{iid}}{\sim}}
+
+\renewcommand{\Re}{\text{Re}\,}
+\renewcommand{\Im}{\text{Im}\,}
+\newcommand{\Var}{\text{Var}\,}
+\newcommand{\Cov}{\text{Cov}\,}
+
+\DeclareMathOperator*{\argmax}{\arg\max}
+\DeclareMathOperator*{\argmin}{\arg\min}
+
+\newcommand{\sign}{\text{sign}\,}
+
+\newcommand*{\tbf}[1]{\ifmmode\mathbf{#1}\else\textbf{#1}\fi}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable, skins}
+\tcbset{enhanced}
+\newenvironment*{tbox}[2][gray]{
+    \begin{tcolorbox}[
+        parbox=false,
+        colback=#1!5!white,
+        colframe=#1!75!black,
+        breakable,
+        title={#2}
+    ]}
+    {\end{tcolorbox}}
+
+\newenvironment*{exercise}[1][red]{
+    \begin{tcolorbox}[
+        parbox=false,
+        colback=#1!5!white,
+        colframe=#1!75!black,
+        breakable
+    ]}
+    {\end{tcolorbox}}
+
+\newenvironment*{proof}[1][blue]{
+\begin{tcolorbox}[
+    parbox=false,
+    colback=#1!5!white,
+    colframe=#1!75!black,
+    breakable
+]}
+{\end{tcolorbox}}
+\newenvironment*{proposition}[1][gray]{
+    \begin{tcolorbox}[
+        parbox=false,
+        colback=#1!5!white,
+        colframe=#1!75!black,
+        breakable
+    ]}
+    {\end{tcolorbox}}
+
+\usepackage{multicol}
+
+\begin{document}
+\begin{multicols}{2}
+    \subsection*{Periodic Orbits}
+    \tbf{Simple Closed Loop:} curve with no self intersections that does not pass through any equilibria
+
+    \tbf{Index:} $I_{\Gamma} = \frac{1}{2\pi}(\phi_1 - \phi_0)$ is the net number of \emph{counterclockwise} rotations made by $F(u)$ traversing $\Gamma$ counterclockwise from $\phi_0$ to $\phi_1$.
+    \begin{itemize}
+        \item If $\Gamma \mapsto \tilde \Gamma$ is a continuous deformation wwithout passing through any equilibria, then $I_{\Gamma} = I_{\tilde \Gamma}$.
+        \item If $F(u)$ is continuously deformed without creating equilibria on $\Gamma$, then $I_{\Gamma}$ is invariant
+        \item If $\Gamma$ does not contain any equilibria, then $I_{\Gamma} = 0$.
+        \item If $\Gamma$ is a periodic orbit, then $I_{\Gamma} = 1$
+        \item If we replace $F(u)$ by $-F(u)$ (time reversal), then the index is not changed
+    \end{itemize}
+
+    \begin{proposition}
+        \textbf{Theorem:} For $F \in C^1$, every periodic orbit of $F$ contains at east one equilibrium
+    \end{proposition}
+
+    \tbf{Isolated Equilibrium:} $F(u) \neq 0$ for all $u\neq u_*$ near $u_*$
+    \begin{itemize}
+        \item The \emph{index of an isolated equilibrium} is the index of a simple closed loop that encloses $u_*$ but no other equilibria
+        \item If $u_*$ is an attractor or repeller, $I(u_*) = 1$
+        \item If $u_*$ is a saddle point, $I(u_*) = -1$
+    \end{itemize}
+
+    \begin{proposition}
+        \textbf{Theorem:} If $\Gamma$ is a simple closed loop enclosing only $n$ isolated equilibria, then $I_{\Gamma} = \sum_{i=1}^n I(u_i)$
+    \end{proposition}
+
+    \begin{proposition}
+        \textbf{Poincare-Bendixson Theorem:} For $\dot u = F(u)$ with $u \in \R^2$ and $F: \R^2 \to \R^2$ in $C^1$ and $R$ a closed bounded subset of $\R^2$ such that
+        \begin{enumerate}
+            \item $R$does not contain any equilibria
+            \item $\exists u(0) \in \R$ so that $u(t) \in \R$ for all $t \geq 0$
+        \end{enumerate}
+        Then $R$ contains a periodic orbit.
+    \end{proposition}
+
+    \subsection*{Hopf Bifurcation}
+    \tbf{Hopf Bifurcation:} If
+    \begin{enumerate}
+        \item $\dot u = F(u, \mu)$ for $u \in \R^2$, $\mu \in \R$, $F \in C^3$
+        \item $u_*$ is an equilibrium for all $\mu \approx \mu_*$
+        \item The Eigenvalues of $F_u(u_*, \mu)$ are of the form $\lambda_{1,2}(\mu) = \alpha(\mu) \pm i\beta(\mu)$, $\alpha(\mu_*) = 0$, $\beta(\mu_*) \neq 0$, and $\frac{d\alpha}{d\mu}\bigg\vert_{\mu_*} \neq 0$
+    \end{enumerate}
+
+    Then we have a \emph{Hopf Bifucation} with perioud $\approx \frac{2\pi}{\beta(\mu_*)}$ and amplitude $\approx \sqrt{\abs{\mu - \mu_*}}$.
+    \begin{itemize}
+        \item If the periodic orbit is stable, we say the bifurcation is \emph{supercritical}. In this case, we have an attractor for $\mu \leq \mu_*$ and a repeller and stable periodic orbit for $\mu > \mu_*$.
+        \item If the periodic orbit is unstable, we say the bifurcation is \emph{subcritical}. In this case, we have an attractor and unstable periodic orbit for $\mu < \mu_*$ and a repeller for $\mu \geq \mu_*$
+    \end{itemize}
+
+    The paradigmatic example is
+    \[\begin{pmatrix}
+            \dot x \\ \dot y
+        \end{pmatrix} = \begin{pmatrix}
+            \mu    & -\omega \\
+            \omega & \mu
+        \end{pmatrix} \begin{pmatrix}
+            x \\y
+        \end{pmatrix} -\alpha(x^2 + y^2)\begin{pmatrix}
+            x \\y
+        \end{pmatrix}\]
+
+    \subsection*{Higher Dimensional Bifurcations}
+
+    \begin{proposition}
+        \textbf{Multi-Dimensional Implicit Function Theorem:} Let $f: \R^n \times \R^m \to \R^n$ be a $C^Kk$ function ($k \geq 1$) with $f(u_*, \mu_*) = 0$. If the Jacobian $f_u(u_*, \mu_*) \in \R^{n \times n}$ is invertible, then there exists a unique $C^k$ function $g: \R^m \to \R^n$ with $u_* = g(\mu_*)$ such that $f(u, \mu) = 0 \iff u= g(\mu)$ for $(u, \mu)$ near $(u_*, \mu_*)$.
+    \end{proposition}
+
+    \tbf{Expected Bifurcations:}
+    \begin{enumerate}
+        \item If $\lambda_1 = 0$ and $\Re \lambda_j \neq 0$ for all $j \neq 1$,
+              \begin{itemize}
+                  \item If $F(-u, \mu) = -F(u, \mu) \; \forall u, \mu$, and $u_* = 0$, then we expect a pitchfork bifurcation.
+                  \item If $F(u_*, \mu) = 0 \; \forall \mu$, then we expect a transcritical bifurcation.
+                  \item Otherwise, we expect a saddle-node
+              \end{itemize}
+
+        \item $\Re \lambda_{1,2} = 0$, $\Im \lambda_{1, 2} \neq 0$ and $\Re \lambda_j \neq 0$ for all $j \neq 1,2$,
+              \begin{itemize}
+                  \item We expect a Hopf bifurcations
+              \end{itemize}
+    \end{enumerate}
+
+    \pagebreak
+    \subsection*{Dissipitative Systems}
+
+    \begin{proposition}
+        \textbf{Lemma:} Let $E: \R^n \to \R^n$ be $C^2$.
+
+        If $\brak{\nabla E(u), F(u)} < 0$ for all $u \in \R^n$ for which $F(u) \neq 0$, then $E(u(t))$ decreases strictly in $t$ for each solution $u(t)$ which is not an equilibrium
+    \end{proposition}
+
+    \tbf{Lyapunov Functional:} $E: \R^n \to \R^n$ in $C^1$ is a \emph{Lyapunov Functional of $\dot u = F(u)$} if $\brak{\nabla E(u(t)), F(u(t))} < 0$ for all $u \in \R^n$ for which $F(u) \neq 0$
+
+    \begin{proposition}
+        \textbf{Lemma:} Assume that $E$ is a Lyapunov functional $\dot u = F(u)$. Then
+        \begin{enumerate}
+            \item The system cannot have any nontrivial periodic orbits
+            \item If $E(u) \to \infty$ and $\abs{u} \to \infty$ and $\dot u = F(u)$ only has isolated equilibria, then for each $u(t)$, $\exists! u_*$ s.t. $u(t) \to u_*$.
+        \end{enumerate}
+    \end{proposition}
+
+    \tbf{Omega-limit set:} $\omega(u(0)) = \{v \in \R^n: \exists t_k \nearrow \infty \text{ s.t. } u_{t_k} \to v\}$
+
+    \begin{proposition}
+        \textbf{Corollary:} The $\omega$-limit set $\omega(v(0)) = \{v \in \R^n: \exists t_k \nearrow \infty \text{ s.t. } u_{t_k} \to v\}$ is invariant: if $v(0) \in \omega(v_0)$, then $v(t) \in \omega(v(0))$ for all $t \in \R$.
+    \end{proposition}
+
+    \tbf{Gradient System:} Systems of the form $\dot u = -\nabla V(u)$ for $C^2$ function $V: \R^n \to \R$ have Lyapunov functional $V$.
+
+    \subsection*{Conservative Systems}
+    \tbf{Conservative Systems:} Consider $\dot u = F(u)$ with $u \in \R^n$ and $F \in C^1$. Let $H: \R^n \to \R$ be $C^2$. We say $H$ is \emph{conserved} if $\brak{\nabla H(u), F(u)} = 0$ for all $u \in \R^n$
+
+    \begin{proposition}
+        \textbf{Lemma:} Assume $H$ is conserved. Then $\frac{d}{dt}(H(u(t))) = 0$ for each solution $u(t)$ and the level set $H^{-1}(c) = \{u \in \R^n: H(u) = c\}$ is invariant for each fixed $c \in \R$.
+    \end{proposition}
+
+    \begin{proposition}
+        \textbf{Corollary:} If $H$ is conserved and if $\nabla H(u)$ vanishes only at isolated points, then $\dot u = F(u)$ cannot have any attractors or repellers.
+    \end{proposition}
+
+    \subsection*{Attractors:}
+    \tbf{Attractor:} Consider $\dot u = f(u)$ with $u \in \R^n$ and denote the solution $u(t)$ with $u(0) = u_0$ by $u(t; u_0) = \phi_t(u_0)$ where $\phi_t: \R^n \to \R^n$. We assume there is a ball $B \sub \R^n$ with $\phi_t(B) \sub B$ for all $t \geq 0$ so that $B$ is forward invariant. The \emph{attractor} $\mathcal A$ of $\dot u = f(u)$ in $B$ is $\mathcal A = \bigcap_{t \geq 0} \phi_t(B)$.
+
+    \begin{proposition}
+        \textbf{Lemma:} Let $\mathcal A$ be the attractor in $B$. Then
+        \begin{itemize}
+            \item $\mathcal A$ is not empty
+            \item $\mathcal A$ is invariant ($u_0 \in \mathcal A \implies \phi_t(u_0) \in \mathcal A$)
+            \item $\mathcal A$ is the largest invariant set in $B$ ($u_0 \in B \land \phi_t(u_0) \in B \implies u_0 \in \mathcal A$)
+            \item $\forall u_0 \in B, \text{dist}(\phi_t(u_0), \mathcal A) = \min_{u \in A} \abs{\phi_t(u_0) - u} \to 0$
+        \end{itemize}
+    \end{proposition}
+
+    \tbf{Sensitive Dependence on Initial Conditions:} We say $\dot u = f(u)$ with $u \in \R^n$ has \emph{sensitive dependence on initial conditions} on a set $\mathcal A$ if $\forall u_0 \in \mathcal A$, $\exists \ep > 0$ s.t. $\forall \delta > 0, \; \exists \tilde u_0 \in \mathcal A$ and $T> 0$ with $\abs{u_0 -\tilde u_0} < \delta$ and $\abs{\phi_T(u_0) - \phi_T(\tilde u_0)} \geq \ep$
+
+    \tbf{Poincare maps:} Consider $\dot u = f(u)$ with $u \in \R^3$. Assume we can find a two-dimensional section $\Sigma \sub \R^3$ so that each solution starting in $\Sigma$ immediately leaves $\Sigma$ but eventually returns.
+
+    For $u_0 \in \Sigma$, let $T(u_0)$ be the time of first return of $\phi_t(u_0)$ to $\Sigma$. We define $\pi(u_0) = \phi_{T(u_0)}(u_0)$ the \emph{Poincare map} of $\Sigma$.
+
+    We can iterate $\pi$ defining $u_0 \in \Sigma, u_n = \pi(u_{n-1}) = \pi^n(u_0)$ and obtain a discrete dyamical system.
+
+\end{multicols}
+\end{document}

@@ -10,6 +10,7 @@
 \usepackage{verbatim}
 \usepackage{subfig}
 \usepackage{fancyhdr}
+\usepackage{multirow}
 \usepackage{sectsty}
 \usepackage[shortlabels]{enumitem}
 
@@ -46,12 +47,25 @@
         },
         postaction={decorate}
         },
-    marking along/.default={0.5}{>}
+    marking along/.default={0.5}{>},
+    wavy/.style={
+        decorate,decoration={coil,aspect=0}
+    }, 
+    two marks/.style n args={1}{
+        decoration={
+            markings,
+            mark=at position 0.25 with {\arrow{#1}},
+            mark=at position 0.75 with {\arrow{#1}}
+        }
+        postaction={decorate}
+
+    }
 }
 
 \usetikzlibrary{external}
 \tikzexternalize
 \tikzsetexternalprefix{figures/}
+\tikzset{external/up to date check={md5}}
 
 \newcommand{\ans}[1]{\boxed{\text{#1}}}
 \newcommand{\vecs}[1]{\langle #1\rangle}
@@ -4603,4 +4617,1613 @@ And we also know that for $a > 0$ we will be supercritical and $a < 0$ we will b
 \end{center}
 
 \tbf{Remark:} It is generally quite difficult to determine analytically whether a Hopf bifurcation is supercritical or subcritical.
+
+\chapter{Equilibria in Higher Dimensions}
+
+Let $\dot u = F(u, \mu)$ for $u \in \R^n$ and $\mu \in \R$ with $F: \R^n \times \R \to \R^n$ in $C^3$.
+
+Assume that $F(u_*, \mu_*) = 0$ with Jacobian $A = F_u(u_*, \mu_*)$ and eigenvalues $\lambda_1, \dots, \lambda_n$ and associated eigenvectors $v_1, \dots, v_n$.
+
+CASE 1: $\lambda_j \neq 0$ for all $j$
+
+Hence, $A$ invertible so by the IFT, for all $\mu \approx \mu_*$, $\dot u = F(u, \mu)$ has a unique equilibrium $u_*(\mu)$ near $u_*$.
+
+\begin{proposition}
+    \textbf{Implicit Function Theorem:} Let $F: \R^n \times \R \to \R^n$ be in $C^k$ for some $k \geq 1$. Assume $F(u_*, \mu_*) = 0$ and that $F_u(u_*, \mu_*) \in \R^{n \times n}$ is invertible. Then $\exists \delta >0 $ and a $g: \R \to \R^n$ in $C^k$ such that $F(u, \mu) = 0$ for $u \in B_{\delta}(u_*)$ and $\mu \in B_{\delta}(\mu_*)$ if and only if $u = u_*(\mu)$ for $\mu \in B_{\delta}(\mu_*)$.
+\end{proposition}
+
+Here, the equilibrium \emph{persists}
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick={1},
+                ytick={1},
+                xticklabels={$\mu_*$},
+                yticklabels={$u_*$},
+                clip=false,
+                xlabel={$\mu$},
+                ylabel={$u$},
+                domain=-2:2,
+                ymin=0, ymax=2,
+                xmin=0, xmax=2,
+                view = {0}{90}
+            ]
+            \draw[blue] (0.5, 0.5) to[bend left] (1, 1) to[bend right] (1.5, 1.5) node[right] {$u = g(\mu)$};
+
+            \draw [dotted, red] (0, 1) -- (1, 1) -- (1, 0);
+            \node[red] at (1, 1) {$\bullet$};
+
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\div
+
+CASE 2: $\lambda_1 = 0$ and $\Re \lambda_j \neq 0$ for $j= 1$
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$\Re \lambda$},
+                ylabel={$\Im \lambda$},
+                domain=-2:2,
+                ymin=-2, ymax=2,
+                xmin= -1, xmax=3,
+                view = {0}{90}
+            ]
+
+            \node[blue] at (0, 0) {$\bullet$};
+            \node[blue, below right] at (0,0) {$\lambda_1$};
+
+            \node[red] at (1, 0) {$\bullet$};
+            \node[red] at (2, 0) {$\bullet$};
+            \node[red, below] at (2, 0) {$\lambda_j$};
+            \node[red] at (-1, 1) {$\bullet$};
+            \node[red] at (-1, -1) {$\bullet$};
+
+            \node at (axis description cs: 0.5, -0.1) {eigenvalues of $A$};
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+which yields essentially the same bifurcations as for $u \in \R$:
+\begin{enumerate}
+    \item \tbf{Pitchfork}
+
+          If $F(-u, \mu) = -F(u, \mu)$ for all $(u, \mu)$ thn we expect a pitchfork.
+
+          \emph{Supercritical Pitchfork Phase Diagrams:}
+
+          \begin{center}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$u_1$},
+                          ylabel={$u_2$},
+                          domain=-2:2,
+                          ymin=-2, ymax=2,
+                          xmin= -2, xmax=2,
+                          view = {0}{90},
+                          axis equal,
+                      ]
+
+                      \draw[blue, marking along] (-1, -1) -- (0, 0);
+                      \draw[blue, marking along] (1, 1) -- (0, 0);
+
+                      \draw[mygreen, marking along] (-1, 1) -- (0, 0);
+                      \draw[mygreen, marking along] (1, -1) -- (0, 0);
+
+                      \draw[mygreen, marking along] (-0.25, 1.25) to[bend left] (0, 0);
+                      \draw[mygreen, marking along] (-1.75, 0.25) to[bend right] (0, 0);
+                      \draw[mygreen, marking along] (-0.25, -1.25) to[bend left] (0, 0);
+                      \draw[mygreen, marking along] (1.75, -0.25) to[bend right] (0, 0);
+
+                      \node[red] at (0,0 ) {$\bullet$};
+
+
+                      \node at (axis description cs: 0.5, -0.1) {$\mu < \mu_*$};
+
+                  \end{axis}
+              \end{tikzpicture}
+              \hspace{1cm}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$u_1$},
+                          ylabel={$u_2$},
+                          domain=-2:2,
+                          ymin=-2, ymax=2,
+                          xmin= -2, xmax=2,
+                          view = {0}{90},
+                          axis equal,
+                          xlabel style={at={(current axis.right of origin)}, anchor=west},
+                          ylabel style={at={(current axis.above origin)}, anchor=south}
+                      ]
+
+
+                      \draw[blue, marking along] (-2, -2) -- (-1, -1);
+                      \draw[blue, marking along] (0, 0) -- (-1, -1);
+                      \draw[blue, marking along] (0, 0) -- (1, 1);
+                      \draw[blue, marking along] (2, 2) -- (1, 1);
+
+                      \draw[mygreen, marking along] (1, -1) -- (0, 0);
+                      \draw[mygreen, marking along] (-1, 1) -- (0, 0);
+                      \draw[mygreen, marking along] (2, 0) -- (1, 1);
+                      \draw[mygreen, marking along] (0, 2) -- (1, 1);
+                      \draw[mygreen, marking along] (0, -2) -- (-1, -1);
+                      \draw[mygreen, marking along] (-2, 0) -- (-1, -1);
+
+                      \draw[mygreen, marking along] (1.1, -1) to[bend left] (1, 1);
+                      \draw[mygreen, marking along] (0.9, -1) to[bend right] (-1, -1);
+                      \draw[mygreen, marking along] (-1, 1.1) to[bend right] (1, 1);
+                      \draw[mygreen, marking along] (-1, 0.9) to[bend left] (-1, -1);
+
+                      \draw[mygreen, marking along] (3, 0.5) to[bend right] (1, 1);
+                      \draw[mygreen, marking along] (1.5, 3) to[bend left] (1, 1);
+                      \draw[mygreen, marking along] (-3, -0.5) to[bend right] (-1, -1);
+                      \draw[mygreen, marking along] (-1.5, -3) to[bend left] (-1, -1);
+
+                      \node[red] at (0, 0) {$\bullet$};
+                      \node[red] at (1, 1) {$\bullet$};
+                      \node[red] at (-1, -1) {$\bullet$};
+
+                      \node at (axis description cs: 0.5, -0.1) {$\mu > \mu_*$};
+                  \end{axis}
+              \end{tikzpicture}
+              \hspace{1cm}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$\mu$},
+                          ylabel={$u$},
+                          domain=-2:2,
+                          ymin=-2, ymax=2,
+                          xmin= -1, xmax=2,
+                          view = {0}{90}
+                      ]
+
+                      \addplot[red, domain=-1:1] {0};
+                      \addplot[red, ultra thick, dashed, domain=1:2] {0};
+
+                      \addplot[red, domain=-1:1] ({x^2+1}, {x});
+
+                      \node at (axis description cs: 0.5, -0.1) {Bifurcation Diagram};
+                  \end{axis}
+              \end{tikzpicture}
+          \end{center}
+
+    \item \tbf{Transcritical}
+
+          If $F(u_*, \mu)= 0$ for all $\mu$, then we expect a transcritical bifurcation.
+
+          \emph{Phase Diagrams ($\lambda_1 < 0 < \lambda_2$)}
+
+          \begin{center}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$u_1$},
+                          ylabel={$u_2$},
+                          domain=-2:2,
+                          ymin=-2, ymax=2,
+                          xmin= -2, xmax=2,
+                          view = {0}{90},
+                          axis equal,
+                          xlabel style={at={(current axis.right of origin)}, anchor=west},
+                          ylabel style={at={(current axis.above origin)}, anchor=south}
+                      ]
+
+                      \draw[blue, marking along] (-1, -1) -- (0, 0);
+                      \draw[blue, marking along] (1, 1) -- (0, 0);
+                      \draw[blue, marking along] (1, 1) -- (2, 2);
+
+
+                      \draw[mygreen, marking along] (-1, 1) -- (0, 0);
+                      \draw[mygreen, marking along] (1, -1) -- (0, 0);
+                      \draw[mygreen, marking along] (2, 0) -- (1, 1);
+                      \draw[mygreen, marking along] (0, 2) -- (1, 1);
+
+                      \draw[mygreen, marking along] (-0.25, 1.25) to[bend left] (0, 0);
+                      \draw[mygreen, marking along] (-1.75, 0.25) to[bend right] (0, 0);
+                      \draw[mygreen, marking along] (-0.25, -1.25) to[bend left] (0, 0);
+                      \draw[mygreen, marking along] (1.75, -0.25) to[bend right] (0, 0);
+                      \draw[mygreen, marking along] (2.1, 0) to[bend left] (2.1, 2);
+                      \draw[mygreen, marking along] (0.25, 2) to[bend right] (1.9, 2);
+
+
+                      \node[red] at (0, 0) {$\bullet$};
+                      \node[red, right] at (0,0) {$u_*$};
+                      \node[red] at (1, 1) {$\bullet$};
+
+                      \node at (axis description cs: 0.5, -0.1) {$\mu < \mu_*$};
+                  \end{axis}
+              \end{tikzpicture}
+              \hspace{1cm}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$u_1$},
+                          ylabel={$u_2$},
+                          domain=-2:2,
+                          ymin=-2, ymax=2,
+                          xmin= -2, xmax=2,
+                          view = {0}{90},
+                          axis equal,
+                          xlabel style={at={(current axis.right of origin)}, anchor=west},
+                          ylabel style={at={(current axis.above origin)}, anchor=south}
+                      ]
+
+                      \draw[blue, marking along] (0, 0) -- (-1, -1);
+                      \draw[blue, marking along] (0, 0) -- (1, 1)  ;
+                      \draw[blue, marking along] (-2, -2) -- (-1, -1);
+
+                      \draw[mygreen, marking along] (-1, 1) -- (0, 0);
+                      \draw[mygreen, marking along] (1, -1) -- (0, 0);
+                      \draw[mygreen, marking along] (-2, 0) -- (-1, -1);
+                      \draw[mygreen, marking along] (0, -2) -- (-1, -1);
+
+                      \draw[mygreen, marking along] (-0.25, 1.25) to[bend left] (0, 0);
+                      \draw[mygreen, marking along] (-1.75, 0.25) to[bend right] (0, 0);
+                      \draw[mygreen, marking along] (-0.25, -1.8) to[bend left] (0, 0);
+                      \draw[mygreen, marking along] (1.75, -0.25) to[bend right] (0, 0);
+                      \draw[mygreen, marking along] (-2.1, 0) to[bend left] (-2.1, -2);
+                      \draw[mygreen, marking along] (-0.25, -2) to[bend right] (-1.9, -2);
+
+
+                      \node[red] at (0, 0) {$\bullet$};
+                      \node[red, right] at (0,0) {$u_*$};
+                      \node[red] at (-1, -1) {$\bullet$};
+
+                      \node at (axis description cs: 0.5, -0.1) {$\mu > \mu_*$};
+                  \end{axis}
+              \end{tikzpicture}
+              \hspace{1cm}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$\mu$},
+                          ylabel={$u$},
+                          domain=-2:2,
+                          ymin=-2, ymax=2,
+                          xmin= 0, xmax=1,
+                          view = {0}{90}
+                      ]
+                      \addplot[red, thick, domain=0:0.5] {0};
+                      \addplot[red, ultra thick, dashed, domain=0.5:1] {0};
+                      \addplot[red, thick, domain=0.5:1] {-2*x+1};
+                      \addplot[red, ultra thick, dashed, domain=0:0.5] {-2*x+1};
+
+                      \node[blue] at (0.5, 0) {$\bullet$};
+
+                      \node at (axis description cs: 0.5, -0.1) {Bifurcation Diagram};
+                  \end{axis}
+              \end{tikzpicture}
+          \end{center}
+
+    \item \tbf{Saddle Node}
+
+          Without these additional structures, we expect to see a saddle-node bifurcation.
+
+          \emph{Phase Diagrams ($\lambda_2 < \lambda_1 < 0$):}
+
+          \begin{center}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$u_1$},
+                          ylabel={$u_2$},
+                          domain=-2:2,
+                          ymin=-2, ymax=2,
+                          xmin= -2, xmax=2,
+                          view = {0}{90},
+                          axis equal,
+                          xlabel style={at={(current axis.right of origin)}, anchor=west},
+                          ylabel style={at={(current axis.above origin)}, anchor=south}
+                      ]
+
+                      \draw[blue, marking along] (0, 0) -- (-1, -1);
+                      \draw[blue, marking along] (0, 0) -- (1, 1)  ;
+                      \draw[blue, marking along] (2, 2) -- (1, 1);
+
+
+                      \draw[mygreen, marking along] (-1, 1) -- (0, 0);
+                      \draw[mygreen, marking along] (1, -1) -- (0, 0);
+                      \draw[mygreen, marking along] (2, 0) -- (1, 1);
+                      \draw[mygreen, marking along] (0, 2) -- (1, 1);
+
+                      \draw[mygreen, marking along] (-0.25, 1.25) to[bend left] (0, 0);
+                      \draw[mygreen, marking along] (-1.75, 0.25) to[bend right] (0, 0);
+                      \draw[mygreen, marking along] (-0.25, -1.25) to[bend left] (0, 0);
+                      \draw[mygreen, marking along] (1.75, -0.25) to[bend right] (0, 0);
+                      \draw[mygreen, marking along] (2.1, 0) to[bend left] (2.1, 2);
+                      \draw[mygreen, marking along] (0.25, 2) to[bend right] (1.9, 2);
+
+
+                      \node[red] at (0, 0) {$\bullet$};
+                      \node[red] at (1, 1) {$\bullet$};
+
+                      \node at (axis description cs: 0.5, -0.1) {$\mu < \mu_*$};
+                  \end{axis}
+              \end{tikzpicture}
+              \hspace{1cm}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$u_1$},
+                          ylabel={$u_2$},
+                          domain=-2:2,
+                          ymin=-2, ymax=2,
+                          xmin= -2, xmax=2,
+                          view = {0}{90},
+                          axis equal,
+                          xlabel style={at={(current axis.right of origin)}, anchor=west},
+                          ylabel style={at={(current axis.above origin)}, anchor=south}
+                      ]
+
+                      \draw[blue, marking along] (1, 1) -- (0, 0);
+                      \draw[blue, marking along] (0, 0) -- (-1, -1);
+
+                      \draw[mygreen, marking along] (2, 0.8) to[bend right] (-0.5, -1.5);
+                      \draw[mygreen, marking along] (1, 2) to[bend left] (-2, 0);
+
+                      \node at (axis description cs: 0.5, -0.1) {$\mu > \mu_*$};
+                  \end{axis}
+              \end{tikzpicture}
+              \hspace{1cm}
+              \begin{tikzpicture}
+                  \begin{axis}[
+                          width=0.3\textwidth,
+                          axis lines=middle,
+                          no markers,
+                          xtick=\empty,
+                          ytick=\empty,
+                          clip=false,
+                          xlabel={$\mu$},
+                          ylabel={$u$},
+                          domain=-2:2,
+                          ymin=-2, ymax=2,
+                          xmin= -2, xmax=2,
+                          view = {0}{90},
+                          axis equal,
+                          xlabel style={at={(current axis.right of origin)}, anchor=west},
+                          ylabel style={at={(current axis.above origin)}, anchor=south}
+                      ]
+
+                      \addplot[red, thick, domain=0:1.2] ({-x^2 + 1}, {x});
+                      \addplot[red, thick, dashed, domain=-1.2:0] ({-x^2 + 1}, {x});
+
+                      \node[blue] at (1, 0) {$\bullet$};
+
+                      \node at (axis description cs: 0.5, -0.1) {Bifurcation Diagram};
+                  \end{axis}
+              \end{tikzpicture}
+          \end{center}
+\end{enumerate}
+
+\div
+
+CASE 3: $\lambda_{1, 2} = \pm i \omega_*$ for $\omega_* \neq 0$ and $\Re \lambda_j \neq 0$ for $j \neq 1, 2$
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$\Re \lambda$},
+                ylabel={$\Im \lambda$},
+                domain=-2:2,
+                ymin=-2, ymax=2,
+                xmin= -2, xmax=2,
+                view = {0}{90}
+            ]
+            \node[blue] at (0, 1) {$\bullet$};
+            \node[blue, right, scale=0.8] at (0, 1) {$i\omega_*$};
+            \node[blue] at (0, -1) {$\bullet$};
+            \node[blue, right, scale=0.8] at (0, -1) {$-i\omega_*$};
+
+            \node[mygreen] at (1, 0) {$\bullet$};
+            \node[mygreen] at (-0.5, 0) {$\bullet$};
+            \node[mygreen] at (-1, -1) {$\bullet$};
+            \node[mygreen] at (-1, 1) {$\bullet$};
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+Hence we expect to encounter a Hopf bifurcation.
+
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{Images/MAR12 - Hopf.png}
+\end{center}
+
+where the manifold is approximately the space spanned by $v_1, v_2$ and the period of the orbits is approximately $\frac{2\pi}{\omega_*}$.
+
+\div
+
+What other cases could we see?
+
+One suggestion is that all the eigenvalues are on the imaginary axis. But this would require a transformation
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={},
+                ylabel={},
+                domain=-2:2,
+                ymin=-2, ymax=2,
+                xmin= -2, xmax=2,
+                view = {0}{90}
+            ]
+            \node[mygreen] at (-1, 0.5) {$\bullet$};
+            \node[mygreen] at (-1, -0.5) {$\bullet$};
+
+            \node[blue] at (1, -1) {$\bullet$};
+            \node[blue] at (1, 1) {$\bullet$};
+
+            \draw[->] (2.5, 0) -- (3.5, 0);
+        \end{axis}
+    \end{tikzpicture}
+    \hspace{0.5cm}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={},
+                ylabel={},
+                domain=-2:2,
+                ymin=-2, ymax=2,
+                xmin= -2, xmax=2,
+                view = {0}{90}
+            ]
+            \node[mygreen] at (0, 0.5) {$\bullet$};
+            \node[mygreen] at (0, -0.5) {$\bullet$};
+
+            \node[blue] at (0, -1) {$\bullet$};
+            \node[blue] at (0, 1) {$\bullet$};
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+But this would require at least two parameters to be able to transform the green and the blue eigenvalues to the same point. In applications, this could happen with exceeding rarity with one parameter but would just be a coincidence.
+
+And in fact, every other case will require more than one parameter.
+
+\chapter{Dissipitative and Conservative Systems}
+\section{March 14}
+\tbf{Goal:} Develop a framework that caputres systems that dissipate energy (e.g. mechanical systems with friction)
+
+Consider $\dot u = F(u)$ with $u \in \R^n$ and $F \in C^1$. Let $E: \R^n \to \R$ be $C^2$.
+
+\begin{tbox}{\textbf{Lemma 1:} If $\brak{\nabla E(u), F(u)} < 0$ for all $u \in \R^n$ to which $F(u) \neq 0$, then $E(u(t))$ decreases strictly in $t$ for each solution $u(t)$ that is not an equilibrium.}
+    \emph{Proof:}
+    \[\frac{d}{dt}(E(u(t))) = E'(u(t)) \cdot \frac{du}{dt}(t) = \brak{\nabla E(u(t)), F(u(t))} < 0\]
+    by assumption (provided $u(t)$ is not an equilibrium)
+\end{tbox}
+
+\tbf{Lyapunov Function:} $\E: \R^n \to \R$ in $C^1$ is a \emph{Lyapunov Function} for $\dot u = F(u)$ if $\brak{\nabla E(u), F(u)} < 0$ for all $u \in \R^n$ to which $F(u) \neq 0$.
+
+\begin{tbox}{\textbf{Lemma  2:} Assume that $E$ is a Lyapunov functional for $\dot u = F(u)$. Then:
+        \begin{enumerate}[(i)]
+            \item $\dot u = F(u)$ cannot have any nontrivial periodic orbits
+            \item If $E(u) \to \infty$, then for each solution $u(t)$ of $\dot u = F(u)$, there exists a unique equilibrium $u_*$ so that $u(t) \to u_*$ as $t \to \infty$
+        \end{enumerate} }
+    \emph{Proof:}
+    \begin{enumerate}[(i)]
+        \item Assume that $u(t)$ is a nontrivial periodic orbit so that there is a $T > 0$ with $u(t + T) = u(t)$ for all $t$ but $u(t)$ not constant. Lemma 1 implies that
+              \[E(u(0)) \overset{u(T) = u(0)}{=} E(u(T)) \overset{\text{Lemma } 1}{<} E(u(0)) \qquad \text{Contradiction}\]
+
+        \item The $\omega$-limit of a solution $u(t)$ is defined
+              \[\omega(u(0)) = \left\{v \in \R^n: \exists t_k \nearrow \infty \st \lim_{k \to \infty} u(t_k) = v\right\}\]
+
+              We want to show that $\omega(u(0))$ consists of a single equilibrium. Fix a solution $u(t)=  u_0$ of $\dot u = F(u)$.
+
+              \begin{enumerate}[1.]
+                  \item There is a ball $B$ of finite radius so that $u(t) \in B$ for all $t \geq 0$: Indeed, $E(u(t)) < E(u(0))$ and $E(u) \nearrow \infty$ as $\abs{u} \to \infty$ so $u(t)$ must be bounded as $t$ increases
+                  \item \emph{($E$ bounded below:)} Since $B$ is bounded, there is a $c \in \R$ so that $E(u) \geq c$ for all $u \in B$.
+                  \item \emph{($E \to E^*$:)} We conclude that there is an $E_0 \in \R$ with $E(u(t)) \searrow E_0$ as $t\to \infty$. In particular, $E(v) = E_0$ for all $v \in \omega(u_0)$.
+                  \item \emph{($v(t) \in \omega(u_0)$ for all $t$:)} If $v(0) \in \omega(u_0)$, then $v(t) \in \omega(u_0)$ for all $t \geq 0$. Indeed, if $u(t_k) \to v(0)$ as $k \to \infty$, then for each $t \in \R$, wr have $u(t+ t_k) \to v(t)$, hence $v(t) \in  \omega(u_0)$
+                  \item Combining (3) and (4) with Lemma 1, we conlclude $\omega(u_0)$ can contain only equilibria
+                  \item We claim that $\omega(u_0)$ is not empty: indeed, $u(t) \in B$ for all $t$ and $B$ bounded, hence the sequence $u(k)$ has a limit point by Bolzano-Weierstrass (and Monotone Convergence).
+                  \item Assume $\omega(u_0)$ contains distinct equilibria $v_1, v_2$. Since we assumed that equilibria are isolated, we can find a ball centered at $v_1$ containing only $v_1$. Let $S$ be the boundary of this ball. Then there is a sequence $S_k \nearrow \infty$ so that $u(S_k) \in S$ for all $u$ (if not, $u(t)$ stays in the ball for all sufficiently large $t$ so $v_2\notin \omega(u_0)$). But by (6), there is a point $w \in S \cap \omega(u_0)$ which contradicts that $\omega(u_0)$ consists of equilibria while $S$ does not contain any equilibria
+              \end{enumerate}
+    \end{enumerate}
+\end{tbox}
+
+\section{March 17}
+
+\tbf{Recall:} Last time, we worked on the proving that if a Lyapunov function $E \to \infty$, then each solution $u$ has a unique equilibrium $u_*$ so that $u(t) \to u_*$ as $t \to \infty$.
+
+\begin{proposition}
+    \textbf{Proof Sketch:} Fix $u(0) = u_0$. Then:
+    \begin{enumerate}
+        \item $u(t)$ is bounded in some (closed) ball
+        \item $E$ is bounded below
+        \item $E \to E*$
+        \item $v(0) \in \omega(u_0)$ implies $v(t) \in \omega(u_0)$
+        \item $\omega(u_0)$ contains only equilibria
+        \item Bolzano Weierstrass implies $\exists t_k$ with $u(t_k) \to u^*$. Thus, $\omega(u_0)$ is nonempty
+        \item For two isolated equilibria $v_1, v_2 \in \omega(u_0)$, we can find a ball around $v_1$ that contains no other equilibria. Choose a sequence in $\partial B$. But then by BW, $\exists v^* \in \partial B(v_1) \cap \omega(u_0)$ which contradicts that $B$ has only one equilibrium
+    \end{enumerate}
+\end{proposition}
+
+\begin{proposition}
+    \textbf{Corollary:} The $\omega$-limit set $\omega(u(0)) = \{v \in \R^n: \exists t_k \nearrow \infty \st u(t_k) \to v\}$ is invariant: if $v(0) \in \omega(u_0)$, then $v(t) \in \omega(u_0)$ for all $t \in \R$
+\end{proposition}
+
+\tbf{Example:} Let $v \in C^2$ and consider $\dot u = -\nabla v$. Then $v$ is a Lyapunov function of this system (\emph{pf:} $\brak{\nabla v, -\nabla v} = -\abs{\abs{\nabla v}}^2 < 0$). We call these systems \emph{gradient systems}.
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw[gray] (0, 0) -- (6, 0) node[right] {$u_1$};
+        \draw[gray] (0, 0) -- (0,4) node[above] {$v$};
+        \draw[gray] (0, 0) -- (2, 1) node[above] {$u_2$};
+
+        \draw[smooth, tension=1] plot coordinates {
+                (2, 3) (3, 0.25) (4, 2) (5, 0.25) (6, 3)
+            };
+
+        \node at (3, 0.25) {$\bullet$};
+        \node at (4,2) {$\bullet$};
+        \node at (5, 0.25) {$\bullet$};
+
+        \draw (2, 3) to[bend right] (6, 3) to[dashed, bend right] (2, 3);
+
+        \draw (2.5, 1) to[bend right] (3.5, 1);
+        \draw[dashed] (3.5, 1) to[bend right] (2.5, 1);
+
+        \draw (4.5, 1) to[bend right] (5.5, 1);
+        \draw[dashed] (5.5, 1) to[bend right] (4.5, 1);
+    \end{tikzpicture}
+\end{center}
+
+But our solutions are perpendicular to level sets of $v$ so we can look at the contour plot:
+
+\begin{center}
+    \begin{tikzpicture}
+        \node[blue] at (0, 0) {$\bullet$};
+        \foreach \x in {-2, 2} {
+                \node[blue] at (\x, 0) {$\bullet$};
+                \draw[mygreen] (\x, 0) circle (1);
+                \draw[mygreen] (\x, 0) circle (0.5);
+            }
+
+        \draw[mygreen, smooth] plot coordinates {
+                (0, 0) (-2, 2) (-4, 0) (-2, -2) (0, 0) (2, 2) (4, 0) (2, -2) (0, 0)
+            };
+
+        \draw[blue, marking along] (0, 2) -- (0, 0);
+        \draw[blue, marking along] (0, -2) -- (0, 0);
+
+        \draw[blue, marking along] (-2.75, 2)  to[bend right] (-2, 0);
+        \draw[blue, marking along] (-0.75, 2)  to[bend left] (-2, 0);
+        \draw[blue, marking along] (-2.75, -2) to[bend left] (-2, 0);
+        \draw[blue, marking along] (-0.75, -2) to[bend right] (-2, 0);
+
+        \draw[blue, marking along] (2.75, 2)  to[bend left] (2, 0);
+        \draw[blue, marking along] (0.75, 2)  to[bend right] (2, 0);
+        \draw[blue, marking along] (2.75, -2) to[bend right] (2, 0);
+        \draw[blue, marking along] (0.75, -2) to[bend left] (2, 0);
+
+    \end{tikzpicture}
+\end{center}
+
+\tbf{Remark:} Every gradient system has a Lyapunov function. But not all systems are gradient systmes. What other kinds of systems can we consider?
+
+\section{March 19}
+\tbf{Example (Pendulum with friction):} Consider the model
+\[mL\ddot \phi = -mg\sin\phi - aL \dot \phi\]
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw (-0.5, 0) -- (0.5, 0);
+        \node at (0, 0) {$\bullet$};
+
+        \draw (0,0) -- (2, -3) node[midway, above] {$L$};
+        \node at (2, -3) {$\bullet$};
+
+        \draw[->, red] (2, -3) -- (2, -3.5) node[right] {$mg$};
+        \draw[red, dashed] (0, 0) -- (0, -3.5);
+
+        \draw[red, dashed] (0, -1) arc (270:300:1) node[midway, below] {$\phi$};
+    \end{tikzpicture}
+\end{center}
+
+Which we can rewrite as a 2D system:
+\[\begin{cases}
+        \dot \phi = v \\
+        \dot v = -bv - \frac{g}{L} \sin \phi = F(\phi, v)
+    \end{cases}\]
+where $b =\frac{a}{m} > 0$.
+
+Can we find a Lyapunov function?
+
+Consider the energy function
+\[E(\phi, v) = \frac{v^2}{2} + \frac{g}{L} \cos \phi\]
+
+Check:
+\[\brak{\nabla E(\phi, v), F(\phi, v)} = \brak{\begin{pmatrix}
+            \frac{g}{L}\sin \phi \\ v
+        \end{pmatrix}, \begin{pmatrix}
+            v \\ -bv - \frac{g}{L} \sin \phi
+        \end{pmatrix}} = -bv^2 \leq 0\]
+
+But to be a Lyapunov functional, we need this to be strictly less than $0$ except at equilibria. To be true, we would need $(\phi, 0)$ to be an equilibrium for all $\phi$ but we can check:
+\[-\frac{g}{L} \sin \phi = 0\]
+is certainly not true for all $\phi$.
+
+Hence, $E$ is not a Lyapunov function for this system. Recall that we used the Lyapunov function to apply the monotone convergence theorem. Let's try to prove properties directly:
+
+\begin{tbox}{\textbf{Claim:} $E(\phi(t), v(t))$ decreases strictly in $t$ except at equilibrium solutions}
+    \emph{Proof:} Pick a time $t_0$ and a duraction $\tau > 0$:
+    \begin{align*}
+        E(\phi(t_0 + \tau), v(t_0+ \tau)) - E(\phi(t_0), v(t_0)) & = \int_0^T \frac{d}{dx} E(\phi(t_0 +s), v(t_0 + s))\; ds                                      \\
+                                                                 & = \int_0^{\tau} \brak{\nabla E(\phi(t_0 + s), v(t_0 + s)), F(\phi(t_0 + s), v(t_0 + s))}\; ds \\
+                                                                 & = \int_0^{\tau} -bv(t_0 + s)^2\; ds
+    \end{align*}
+    and now it suffices to find conditions such that $-b\int_0^{\tau} v(t_0 + s)^2\; dx < 0$ except at equilibria.
+
+    But note that if $E(\phi(t_0 + \tau), v(t_0+ \tau)) - E(\phi(t_0), v(t_0)) = 0$ for some $t_0 \in \R$ and $\tau > 0$, then
+    \[-b \int_0^{\tau} v(t_0 + s)^2\; ds = 0 \implies v(t_0 + s) = 0\]
+    for all $s \in [0, \tau]$.
+
+    Hence, in particular, $v'(t) = 0$ for all $t \in (t_0, t_0 + \tau)$ and also $\phi'(t) = v(t) = 0$ for all such $t$.
+
+    By uniqueness, $(\phi(t), v(t))$ does not depend on $t$ for $t \in (t_0, t_0 + \tau)$ and must therefore be an equilibrium.
+\end{tbox}
+
+\tbf{Conclusion:} All results from Lyapunov functions are applicable to the pendulum with friction system.
+
+Notice that since
+\[\frac{d}{dt}E(\phi(t), v(t)) = -bv(t)^2\]
+where $b$ is the friction coefficient, if $b = 0$ (no friction), then $\frac{d}{dt}E = 0$ for all $t$ so $E$ is constant: without friction, the energy is conserved.
+
+\subsection{Conservative Systems (Hamiltonian Systems)}
+\tbf{Goal:} Develop a framework for processes that conserve a quantity in time (e.g. mechanical energy or population size)
+
+Consider $\dot u = F(u)$ with $u \in \R^n$ and $F \in C^1$. Let $H: \R^n \to \R$ be $C^2$.
+
+\tbf{Definition:} We say that $H$ is a \emph{conserved quantity} for $\dot u = F(u)$ if $\brak{\nabla H(u), F(u)} = 0$ for all $u \in \R^n$.
+
+\begin{tbox}{\textbf{Lemma:} Assume $H$ is a conserved quantity for $\dot u = F(u)$. Then $H(u(t))$ is independent of $t$ for each solution $u(t)$ of $\dot u = F(u)$ and therefore
+        \[H^{-1}(c) = \{u \in \R^n: H(u) = c\}\]
+        is invariant under solutions for each fixed $c\in \R$. }
+    \emph{Proof:} We need to show that $H(u(t))$ is a constant, that is
+    \[\frac{d}{dt}(H(u(t))) = 0\]
+    but this happens iff
+    \begin{align*}
+        \frac{d}{dt}(H(u(t))) & = \brak{\nabla H(u(t)), \dot u(t)}   \\
+                              & = \brak{\nabla H(u(t)), F(u(t))} = 0
+    \end{align*}
+    by assumption
+\end{tbox}
+
+\tbf{Example ($n=2$):} $H: \R^2 \to \R$ gives $\{u \in \R^2: H(u) = c\}$ for $c$ fixed.
+
+But this reminds us of the setup of the IFT, so we expect $H^{-1}(c)$ to be curves or lines in $\R^2$:
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw (0, 0) -- (2, 0) node[right] {$u_1$};
+        \draw (0, 0) -- (0, 2) node[above] {$u_2$};
+
+        \draw[blue, smooth] plot coordinates {
+                (0.5, 0.5) (1, 1) (1.5, 0.5) (2, 1.5)
+            };
+    \end{tikzpicture}
+\end{center}
+
+\tbf{Conclusion:} This Lemma lets us reduce the dimensionn of the system.
+
+\begin{tbox}{\textbf{Corollary:} Assume $H$ is a conserved quantity for $\dot u = F(u)$ and suppose that $\nabla H(u) = 0$ only at isolated points, then $\dot u = F(u)$ cannot have any attractors or repellers.}
+    \emph{Proof:} WLOG assume that $u_*$ is an attractor (for the repeller case, just reverse time).
+
+    \begin{center}
+        \begin{tikzpicture}
+            \draw[blue] (0, 0) circle (2) node[red] {$\bullet$};
+
+            \foreach \x in {0, ..., 5} {
+                    \draw[mygreen, marking along, shorten >= 10pt] (72*\x:2) -- (0, 0);
+                }
+        \end{tikzpicture}
+    \end{center}
+
+    $u_*$ is an attractor, hence there is a $\delta > 0$ so that for each $u_0$ with $\abs{u_0 - u_*} < \delta$ we have $u(t) \to u_*$ as $t \to \infty$. We also know that $H(u(t)) = H(u(0)) = H(u_0)$ for all $t$ by the preceding lemma. Furthermore, since $H$ is continuous, we have
+    \[H(u_0) = \lim_{t \to \infty} H(u(t)) = H(\lim_{t \to\infty}) = H(u_*)\]
+
+    But then $H(u) = H(u_*)$ for all $u$ with $\abs{u - u_*} < \delta$ which contradicts that $\nabla H(u)$ cannot vanish in open sets.
+\end{tbox}
+
+\tbf{Example (Hamiltonian Systems):} Consider $\ddot x = f(x)$ for $x \in \R$ and $f \in C^1$.
+
+We can rewrite this as a first-order system:
+\[\begin{pmatrix}
+        \dot x \\
+        \dot v
+    \end{pmatrix} = \begin{pmatrix}
+        v \\
+        f(x)
+    \end{pmatrix}\]
+
+Pick the mechanical energy:
+\[H(x, v) = \frac{v^2}{2} - \int_0^x f(y)\; dy\]
+
+\begin{tbox}{\textbf{Claim:} $H(x, v)$ is a conserved quantity}
+    \emph{Proof:} Suffices to check
+    \[\brak{\nabla H(x, v), F(x, v)} = 0\]
+    for all $(x, v)$:
+    \begin{align*}
+        \nabla H(x, v)                 & = \begin{pmatrix}
+                                               H_x(x, v) \\
+                                               H_v(x, v)
+                                           \end{pmatrix} = \begin{pmatrix}
+                                                               -f(x) \\
+                                                               v
+                                                           \end{pmatrix}                              \\
+        \brak{\nabla H(x, v), F(x, v)} & = \begin{pmatrix}
+                                               -f(x) \\
+                                               v
+                                           \end{pmatrix} \cdot \begin{pmatrix}
+                                                                   v \\
+                                                                   f(x)
+                                                               \end{pmatrix} = -f(x)v + vf(x) = 0 \qed
+    \end{align*}
+
+    \div
+
+    \tbf{Note:} $\nabla H(x, v) = \begin{pmatrix}
+            -f(x) \\ v
+        \end{pmatrix}$ vanishes only at equilibria! Hence, no attractors and no repellers.
+\end{tbox}
+
+\section{March 21}
+\tbf{Example (Pendulum):} Consider the pendulum system
+\[\ddot \phi = -\frac{g}{L} \sin \phi \iff \begin{pmatrix}
+        \dot \phi \\ \dot v
+    \end{pmatrix} = \begin{pmatrix}
+        v \\ -\frac{g}{L}\sin\phi
+    \end{pmatrix}\]
+which has Hamiltonian
+\[H(\phi, v) = \frac{v^2}{2} + \int^{\phi} \frac{g}{L} \sin y\; dy = \frac{v^2}{2} - \frac{g}{L} \cos \phi\]
+which is conserved along solutions.
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw (0, 0) -- (5, 0) node[right] {$\phi$};
+        \draw (0, 0) -- (0, 4) node[above] {$H(\phi, v)$};
+        \draw (0, 0) -- (2, 1) node[above] {$v$};
+
+        \node[red] (l) at (2, 3) {$\bullet$};
+        \node[red] (c) at (4, 1) {$\bullet$};
+        \node[red] (r) at (6, 3) {$\bullet$};
+
+        % arcs
+        \draw[blue, dashed] (2, 3) to[bend right] (2.25, 3.75);
+        \draw[blue] (2, 3) to[bend left] (1.75, 3.5);
+
+        \draw[blue, dashed] (4, 1) to[bend right, out=-10] (4.25, 3.75);
+        \draw[blue] (4, 1) to[bend left, out=10] (3.75, 3.5);
+
+        \draw[blue, dashed] (6, 3) to[bend right] (6.25, 3.75);
+        \draw[blue] (6, 3) to[bend left] (5.75, 3.5);
+
+        % top lines
+        \draw[blue] (2.25, 3.75) -- (4.25, 3.75) -- (6.25, 3.75) node[above] {$v^2$};
+        \draw[blue] (1.75, 3.5) -- (3.75, 3.5) -- (5.75, 3.5);
+
+        % cos phi 
+        \draw[smooth, mygreen] plot coordinates {
+                (2, 3) (2.5, 2.75) (4, 1) (5.5, 2.75) (6, 3)
+            } node[below right] {$-\cos \phi$};
+
+        %level sets
+        \draw[orange] (3, 2) to[bend right] (5, 2);
+        \draw[dashed, orange] (3, 2) to[bend left] (5, 2);
+
+        \draw[orange, smooth] (1.8, 3.3) -- (4, 3.2) -- (5.75, 3.3);
+        \draw[orange, smooth] (2.2, 3.6) -- (4, 3.6) -- (6.25, 3.6);
+    \end{tikzpicture}
+    \hspace{1cm}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$\phi$},
+                ylabel={$v$},
+                domain=-2:2,
+                ymin=-2, ymax=2,
+                xmin= -2, xmax=2,
+                view = {0}{90}
+            ]
+            \node[red] at (0,0) {$\bullet$};
+            \node[red, right] at (0,0) {$0$};
+            \node[red] at (1,0) {$\bullet$};
+            \node[red, above right] at (1,0) {$\pi$};
+            \node[red] at (-1,0) {$\bullet$};
+            \node[red, above left] at (-1,0) {$-\pi$};
+
+            \draw[orange, marking along={0.25}{>}, marking along={0.75}{>}] (0, 0) ellipse (0.4 and 0.3);
+            \draw[orange, marking along] (-1, 0) to[out=70, in=120] (1, 0);
+            \draw[orange, marking along] (1, 0) to[out=-120, in=-70] (-1, 0);
+            \draw[orange, marking along] (-2, 0.25) to[out=0, in=180] (0, 1) to [out=0, in=180] (2, 0.25);
+            \draw[orange, marking along] (2, -0.25) to[out=180, in=0] (0, -1) to [out=180, in=0] (-2, -0.25);
+
+        \end{axis}
+
+    \end{tikzpicture}
+\end{center}
+
+\tbf{Note:} the level sets (orange) are circles near the trough but not closed near the top. When they are circles, the pendulum swings back and forth. When they are not closed, the pendulum overturns.
+
+\chapter{Chaotic Dynamics}
+\section{March 31}
+\tbf{Goals:}
+\begin{itemize}
+    \item explore chaotic dynamics through numercial solutions of two differential equations in $\R^3$
+    \item define what we mean by ``chaotic dynamics''
+    \item characterize, analyze, and classify chaotic dynamics
+\end{itemize}
+
+\subsection{Lorenz Equations:}
+\[\begin{cases}
+        \dot x = \sigma(y-x)     \\
+        \dot y = \rho x - y - xz \\
+        \dot z = xy - \beta z
+    \end{cases}\]
+given by a 3-mode truncation of the Fourier-sereis solution of equations describing Rayleigh-Bernard Convection. The classical parameter values are $\sigma = 10$, $\rho = 28$, and $\beta = \frac{8}{3}$.
+
+\begin{center}
+    \resizebox{0.6\textwidth}{!}{
+        \begin{tikzpicture}
+            \draw (0, 0) -- (6, 0) node[right] {$\rho$};
+            \draw (0, 0) -- (0, 2);
+
+            \draw[dotted, red] (2, 0) -- (2, 2) node[scale=0.6, left] {homoclinic};
+            \draw[dotted, red] (3, 0) -- (3, 1) node[scale=0.6, above right] {Hopf};
+            \draw[dotted, red] (5, 0) -- (5, 2);
+
+            \draw[blue, thick] (0, 0) -- (1, 0);
+            \node[red, above left, scale=0.6] at (1, 0) {pitchfork};
+
+            \draw[blue, thick] (1, 0) to[bend left] (3, 1);
+            \draw[blue, thick, dashed] (3, 1) -- (6, 1.1);
+
+            \draw[blue, dashed, ultra thick] (1, 0) -- (1.5, 0) -- (6, 0);
+
+            \draw[mygreen, ultra thick, dashed] (3, 1) to[bend right] (2, 2);
+            \draw[mygreen, ultra thick, dashed] (3, 1) to[bend left] (2, 0);
+
+            \draw[red, <->] (4.75, 1.75) -- (5.25, 1.75);
+            \node[red, right, scale=0.6] at (5, 0.5) {chaos};
+
+            \node[red] at (1, 0) {$\bullet$};
+            \node[red] at (2, 0) {$\bullet$};
+            \node[red] at (3, 1) {$\bullet$};
+
+            \node[scale=0.5, below, black] at (1, 0) {1} ;
+            \node[scale=0.5, below, black] at (2, 0) {13.93};
+            \node[scale=0.5, below] at (3, 0) {24.74};
+            \node[scale=0.5, below, black] at (5, 0) {28};
+        \end{tikzpicture}
+    }
+\end{center}
+
+\subsection{Rossler System}
+\[\begin{cases}
+        \dot x = -y - z \\
+        \dot y = x + ay \\
+        \dot z = b - cz + xz
+    \end{cases}\]
+was proposed as a simpler model for chaos and exhibits periodic-doubling bifurcations. The classical parameter values are $a= b = 0.1, c \geq 9$.
+
+\section{April 2}
+\subsection{Attractors}
+\tbf{Attractors:} Consider $\dot u = f(u)$ with $u \in \R^n$ and denote the solution $u(t)$ with initial condition $u(0) = u_0$ by $u(t; u_0) = \phi_t(u_0)$, where $\phi_t: \R^n \to \R^n$ maps $u_0 \mapsto u(t; u_0)$. We assume that there is a ball $B \sub \R^n$ such that $\phi_t(B) \sub B$ for all $t \geq 0$ so that $B$ is forward invariant (and is therefore a trapping region).
+
+The attractor $A$ of $\dot u = f(u)$ in the ball is then given by
+\[A = \bigcap_{t \geq 0} \phi_t(B) = \bigcap_{t \geq 0} \{\phi_t(u_0): u_0 \in B\}\]
+
+\begin{proposition}
+    \textbf{Lemma:} Let $A$ be the attractor in $B$. Then
+    \begin{itemize}
+        \item $A$ is non-empty
+        \item $A$ is (backwards and forwards) invariant: if $u_0 \in A$, then $\phi_t(u_0) \in A \quad \forall t \in \R$
+        \item $A$ is the largest invariant set in $B$: if $u_0 \in B$ so that $\phi_t(u_0) \in B$ for all $t \in \R$, then $u_0 \in A$.
+        \item For each $u_0 \in B$, we have $\text{dist}(\phi_t(u_0), A) = \min_{u \in A} \abs{\phi_t(u_0) - u} \to 0$ as $t \to \infty$.
+    \end{itemize}
+\end{proposition}
+
+\tbf{Remark:} we want to find equilibria for Lorenz and Rossler and eventually study the dynamics. This lemma tells us that it suffices to focus on the attractor $A$.
+
+\emph{Examples:}
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw[mygreen, fill, fill opacity=0.1, rotate=20] (0, 0) ellipse (1.5 and 1);
+
+        \foreach \x in {0, 1, 2, 3} {
+                \draw[marking along, rotate=20] (\x*90:1.5 and 1) to[bend left] (0, 0);
+            }
+
+        \node [red] at (0, 0) {$\bullet$};
+        \node [red, below right] at (0, 0) {$A$};
+        \node[mygreen, above] at (60:1.5 and 1) {$B$};
+    \end{tikzpicture}
+    \hspace{1cm}
+    \begin{tikzpicture}
+        \draw[mygreen, fill, fill opacity=0.1, rotate=-20] (0, 0) ellipse (3 and 1);
+
+        \foreach \x in {0, ..., 3} {
+                \draw[marking along, rotate=-20] (\x*50+90:3 and 1) to[bend left] (-1, 0);
+                \draw[marking along, rotate=-20] (\x*50-80:3 and 1) to[bend right] (1, 0);
+            }
+
+        \node [red] at (-1, 0.3) {$\bullet$};
+        \node [red] at (1, -0.3) {$\bullet$};
+        \draw[red, rotate=-20, marking along, thick] (-1, 0) to[bend right] (1, 0) node[midway] {$A$};
+
+        \node[mygreen, above] at (60:1.5 and 1) {$B$};
+    \end{tikzpicture}
+\end{center}
+
+\tbf{Note:} In the second example, we know the attractor because all other orbits would leave $B$ in backwards time. The path between the equilibria, however, would just move back and forth between the two equilibria.
+
+\subsection{Sensitive Dependence on Initial Conditions}
+
+\tbf{Definition:} We say that an attractor $A$ has \emph{sensitive dependence on initial conditions} if $\forall u_0 \in A$, $\exists \ep > 0$ so that for each $\delta > 0$, there is a $\tilde u_0 \in A$ with $\abs{u_0 - \tilde u_0} < \delta$ and a $T > 0$ so that $\abs{\phi_T(u_0) - \phi_T(\tilde u_0)} \geq \ep$.
+\[\]
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw[red] (0,0) to[bend right] (0, 2) node [above] {$A$};
+
+        \node[mygreen] (tu) at (0.25, 0.5) {$\bullet$};
+        \node[blue] (u) at (0.15, 0.25) {$\bullet$};
+
+        \draw[mygreen, wavy] (tu) -- (3, 2) node {$\bullet$};
+        \draw[blue, wavy] (u) -- (3, 0.25) node {$\bullet$};
+
+        \node[mygreen] (tuT) at (3, 2) {$\bullet$};
+        \node[mygreen, right of=tuT] {$\phi_T(\tilde u_0)$};
+        \node[blue] (uT) at (3, 0.25) {$\bullet$};
+        \node[blue, right of=uT] {$\phi_T(u_0)$};
+
+        \draw[dashed] (3,2) -- (3,0.25) node[midway, right] {$\ep$};
+
+
+
+    \end{tikzpicture}
+\end{center}
+
+\tbf{Intuition:} Every solution acts like a saddle
+
+\subsection{Poincare Maps}
+\tbf{Goal:} try to reduce the the system $\dot u = f(u), \; u \in \R^3$ to a map on a 2D surface (leads to planar maps).
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw (0, 0) -- (4, -0.25) -- (4.6, 1) -- (1, 1) -- cycle;
+
+        \node[right] at (4.6, 1) {$\Sigma$};
+
+        \node[red] at (1, 0.3) {$\bullet$};
+        \node[red, above] at (1, 0.3) {$u_0$};
+
+        \node[red] at (3, 0.5) {$\bullet$};
+        \node[red, below right] at (3, 0.5) {$\phi_T(u_0) = \pi(u_0)$};
+
+        \draw[red, shorten >= 5pt, ->] (1, 0.3) -- (3, 0.5) node[midway, above] {$\pi$};
+
+        \draw[red, dashed] (1, 0.3) -- (1, -0.5);
+        \draw[red, marking along] (1, -0.5) arc (-90:-380:2.1 and 1.5);
+    \end{tikzpicture}
+\end{center}
+
+Here $T$ is chosen as the first time $t > 0$ for which $\phi_t(u_0) \in \Sigma$. Let $Y = T(u_0)$ denote the first return time to $\Sigma$: $\pi(u_0) = \phi_{T(u_0)}(u_0)$.
+
+Then we can iterate this process to have a collection of maps between points in $\Sigma$.
+
+\section{April 4}
+\subsection{Recall:} We are interested in $\dot u = f(u)$ for $u \in \R^3$. We want to remove the time direction and reduce the ODE to a system of planar maps. Assume we cna find a bounded two-dimensional rectangle $\Sigma$ (``the section'') so that each solution starting in $\Sigma$ will immediately leave $\Sigma$ and eventually return to it.
+
+Let $T(u_0) > 0$ denote the first time that $\phi_t(u_0)$ intersects $\Sigma$ for each $u_0 \in \Sigma$.
+
+We can then define the \emph{Poincare map} $\pi: \Sigma \to \Sigma$ by $u_0 \mapsto \phi_{T(u_0)}(u_0)
+$.
+
+\tbf{Idea:} If we iterate $\pi$ we get a discrete dynamical system on $\Sigma$:
+\begin{align*}
+    u_0 & \in \Sigma                                     \\
+    u_1 & = \pi(u_0) \in \Sigma                          \\
+    u_2 & = \pi(u_1) = (\pi \circ \pi)(u_0) = \pi^2(u_0) \\
+        & \vdots                                         \\
+    u_n & = \pi^n(u_0)
+\end{align*}
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw (0, 0) -- (4, 0) -- (4, 4) -- (0, 4) -- cycle;
+        \node[above right] at (4, 4) {$\Sigma$};
+
+        \node[red] (0) at (1, 3) {$\bullet$};
+        \node[red, above] at (1, 3) {$u_0$};
+        \node[red] (1) at (3, 2) {$\bullet$};
+        \node[red, below right] at (3, 2) {$u_1$};
+        \node[red] (2) at (1, 1) {$\bullet$};
+        \node[red, below] at (1, 1) {$u_2$};
+        \node[red] (dots) at (0.5, 2) {$\dots$};
+        \node[red] (n) at (3, 1) {$\bullet$};
+        \node[red, below left] at (3, 1) {$u_n$};
+
+        \draw[->, red] (0) -- (1);
+        \draw[->, red] (1) -- (2);
+        \draw[->, red] (2) -- (dots);
+        \draw[->, red] (dots) -- (n);
+
+
+    \end{tikzpicture}
+\end{center}
+
+\subsection{Poincare Maps for the Rossler System}
+
+The numerical approach is to
+\begin{enumerate}
+    \item Define $\Sigma = \{(x, y, z): y + z = 0\}$
+    \item Pick $u_0 = (x_0, y_0, z_0) \in \Sigma$ and use Matlab's ODE solver to compute the intersections of the solution with $\Sigma$.
+    \item To visualize the attractor $A$ we iterate a large number of times $n \geq N \gg 1$ to be close to the attractor (since $\abs{u(t) - A} \to 0$). Only then do we start to plot the iterations
+\end{enumerate}
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw (0, 0) -- (4, 0) -- (4, 4) -- (0, 4) -- cycle;
+        \node[above right] at (4, 4) {$\Sigma$};
+
+        \node[above] at (2, 4) {$x + z = 0$};
+        \node[above left] at (0, 4) {$z$};
+        \node[below right] at (4, 0) {$x$};
+
+        \draw[blue, ultra thick, dotted] (1, 1) to[bend right] (3, 2) node[above] {$\pi^n(u_0)$};
+        \draw[red] (3, 1.8) to[bend left] (1, 0.8) node[left] {$A$};
+
+        \draw[mygreen, fill] (2, 1.2) circle (0.05) node[above left] {$u_{n+1}$};
+        \draw[mygreen, fill] (2.5,1.5) circle (0.05) node[above left] {$u_n$};
+
+        \draw[mygreen, dashed] (2, 1.2) -- (2, 0) node[below] {$x_{n+1}$};
+        \draw[mygreen, dashed] (2.5, 1.5) -- (2.5, 0) node[below] {$x_{n+1}$};
+
+    \end{tikzpicture}
+\end{center}
+
+We suspect the attractor $A$ to follow these points. In this case, $A$ appears to be one dimensional and parameterized by $x$.
+
+We can then plot $x_n$ vs $x_{n+1}$ to see the structure of the attractor.
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                no markers,
+                axis lines=middle,
+                xtick=\empty,
+                ytick=\empty,
+                clip=false,
+                xlabel={$x_n$},
+                ylabel={$x_{n+1}$},
+                domain=-2:2,
+                ymin=0, ymax=2,
+                xmin= 0, xmax=4,
+                view = {0}{90}
+            ]
+
+            \begin{scope}
+                \clip (0, 0) rectangle (4, 2);
+                \addplot[blue] {-(x-1)^2 + 1.5};
+            \end{scope}
+            \node[blue, above right] at (1.5, 1.225) {$f(x)$};
+
+            \draw[red, marking along] (1.5, 0) -- (1.5, 1.225) node {$\bullet$};
+            \draw[red, marking along] (1.5, 1.225) -- (0.5, 1.225) node {$\bullet$};
+            \draw[red, marking along] (0.5, 1.225) -- (0, 1.225) node {$\bullet$};
+            \draw[red, marking along] (0.5, 0) -- (0.5, 1.225) node {$\bullet$};
+            \node[red] at (0.5, 0) {$\bullet$};
+            \node[red] at (1.5, 0) {$\bullet$};
+
+            \node at (axis description cs: 0.5, -0.1) {$x_{n+1} = f(x_n) \quad \forall n$};
+
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+What is the behavior of $f(x)$?
+\begin{itemize}
+    \item Sensitive dependence on initial conditions: $f$ needs to stretch out $A$.
+
+          \begin{center}
+              \begin{tikzpicture}
+                  \draw[blue] (0, 0) -- (0, 1) node[midway, red, left] {$A$};
+                  \draw[blue] (-0.2, 1) -- (0.2, 1) node[midway, above] {1};
+                  \draw[blue] (-0.2, 0) -- (0.2, 0) node[midway, below] {0};
+
+                  \draw[blue] (2, 0) -- (2, 2);
+                  \draw[blue] (1.8, 2) -- (2.2, 2) node[midway, above] {1};
+                  \draw[blue] (1.8, 0) -- (2.2, 0) node[midway, below] {0};
+
+                  \draw[->] (0.25, 0.25) to[bend right] (1.75, 0.25);
+                  \draw[->] (0.25, 1) to[bend right] (1.75, 1.75);
+                  \node at (1, 0.7) {stretch};
+
+                  \draw[->] (2.2, 1) -- (3.2, 1) node[midway, above] {fold};
+
+                  \draw[blue] (3.4, 0) arc (180:0:0.3 and 1.3);
+                  \draw[blue] (3.3, 0) -- (3.5, 0) node[midway, below] {0};
+                  \draw[blue] (3.9, 0) -- (4.1, 0) node[midway, below] {0};
+
+                  \draw[->] (4.1, 1) -- (5.1, 1) node[midway, above] {project};
+
+                  \draw[blue] (5.5, 0) -- (5.5, 1) node[midway, red, right] {$A$};
+                  \draw[blue] (5.3, 1) -- (5.7, 1) node[midway, above] {1};
+                  \draw[blue] (5.3, 0) -- (5.7, 0) node[midway, below] {0};
+
+                  \draw[->] (0, -0.5) to[bend right] (5.3, -0.5);
+                  \node at (2.5, -0.7) {$f$};
+
+                  \node[mygreen] at (0, 0) {$\bullet$};
+                  \node[mygreen] at (0, 1) {$\bullet$};
+                  \node[mygreen] at (2, 0) {$\bullet$};
+                  \node[mygreen] at (2, 2) {$\bullet$};
+                  \node[mygreen] at (3.4, 0) {$\bullet$};
+                  \node[mygreen] at (4, 0) {$\bullet$};
+                  \node[mygreen] at (5.5, 0) {$\bullet$};
+
+              \end{tikzpicture}
+          \end{center}
+\end{itemize}
+
+\tbf{Conclusion:} contrary to our expectation, $A$ cannot be a one-dimensional curve or else $\pi \big\vert_A$ would violate the existence and uniqueness of solutions since $f$ is not one-to-one
+
+We update our conjecture
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw (0, 0) -- (4, 0);
+        \draw (0, 0) -- (0, 4);
+
+        \draw[blue, ultra thick] (1, 0) -- (3, 0) node[midway, below] {$I$};
+        \foreach \x in {1, 3} {
+                \draw[blue, thick] (\x, -0.1) -- (\x, 0.1);
+            }
+
+        \draw[red] plot coordinates {
+                (1, 0.2) (3, 0.3) (1, 0.4) (3, 0.5) (1, 0.6) (3, 0.7) (1, 0.8) (3, 0.9)
+                (1, 1) (3, 1.1) (1, 1.2) (3, 1.3) (1, 1.4) (3, 1.5) (1, 1.6) (3, 1.7) (1, 1.8) (3, 1.9)
+                (1, 2) (3, 2.1) (1, 2.2) (3, 2.3) (1, 2.4) (3, 2.5) (1, 2.6) (3, 2.7) (1, 2.8) (3, 2.9)
+                (1, 3) (3, 3.1)
+            };
+
+
+
+    \end{tikzpicture}
+\end{center}
+
+which is a collection of copies of a one-dimensional interval $I$ all glued together.
+
+How many copies do we need? It turns out this graph is a Cantor set with fractional dimensional less than 1 (hence why we were fooled earlier). We conclude $A \approx C \times I/\text{``glue''}$
+
+\section{April 7}
+\subsection{Interval Maps}
+Consider $f: [0, 1] \to [0, 1]$ defining a discrete dynamical system.
+
+\tbf{Examples:}
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick={0, 1},
+                ytick={0,1},
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                domain=0:1,
+                ymin=0, ymax=1,
+                xmin=0, xmax=1,
+                view = {0}{90}
+            ]
+            \addplot[blue] {-4*(x-1)*x};
+            \node at (axis description cs: 0.5, -0.3) {quadratic map};
+        \end{axis}
+    \end{tikzpicture}
+    \hspace{1cm}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick={0, 1},
+                ytick={0,1},
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                domain=0:1,
+                ymin=0, ymax=1.5,
+                xmin=0, xmax=1,
+                view = {0}{90}
+            ]
+            \addplot[blue, domain=0:0.5] {2*x};
+            \addplot[blue, domain=0.5:1] {2*x-1};
+            \node at (axis description cs: 0.5, -0.3) {$f(x) = 2x\text{mod}\, 1$};
+        \end{axis}
+    \end{tikzpicture}
+    \hspace{1cm}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick={0, 1},
+                ytick={0,1},
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                domain=0:1,
+                ymin=0, ymax=1,
+                xmin=0, xmax=1,
+                view = {0}{90}
+            ]
+            \addplot[blue] {-2*abs(x-0.5)+1};
+            \node at (axis description cs: 0.5, -0.3) {tent map};
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\tbf{Example:} Let
+\[x_n = \frac{1}{2}x_{n-1} = \frac{1}{2}\left(\frac{1}{2} x_{n-2}\right) = \frac{1}{4}x_{n-2} = \dots = \frac{1}{2^n}x_0\]
+
+Hence $f^n(x) = \frac{1}{2^n}x$
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick={0, 1},
+                ytick={0, 1/2, 1},
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                domain=0:1,
+                ymin=0, ymax=1,
+                xmin=0, xmax=1,
+                view = {0}{90}
+            ]
+            \addplot[blue] {x/2};
+            \node at (axis description cs: 0.5, -0.1) {$f(x) = \frac{x}{2}$};
+
+            \draw[dotted, gray] (1, 0) -- (1, 1) -- (0, 1);
+            \draw[dotted, gray] (0, 1/2) -- (1, 1/2);
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\tbf{Orbit:} $\gamma(x_0) = \{x_n: x_n = f(x_{n-1})\; n \geq 1\}$ is the set of all forward iterates of $x_0$ under $f$
+
+\tbf{Fixed point:} $x_*$ is a fixed point of $f$ if $f(x_*) = x_*$. Equivalently, $\gamma(x_*) = \{x_*\}$.
+
+\tbf{Periodic Orbit:} $x_0$ is a periodic orbit of period $k \geq 2$ is $x_k = x_0$ but $x_n \neq x_0$ for $0 < n < k$
+
+\tbf{Cobweb:}
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.3\textwidth,
+                axis lines=middle,
+                no markers,
+                xtick={0, 0.183, 0.357, 0.6, 0.75, 0.901, 1},
+                xticklabels={0, \textcolor{orange}{$x_0$},\textcolor{orange}{$x_3$}, \textcolor{orange}{$x_1$}, \textcolor{red}{$x_*$}, \textcolor{orange}{$x_2$}, 1},
+                ytick={0,1},
+                clip=false,
+                xlabel={$x$},
+                ylabel={$y$},
+                domain=0:1,
+                ymin=0, ymax=1.5,
+                xmin=0, xmax=1.5,
+                view = {0}{90}
+            ]
+            \addplot[blue] {-4*(x-1)*x};
+            \node[blue, above] at (0.5, 1) {$f(x)$};
+
+            \addplot {x} node[right] {$y=x$};
+
+            \draw[orange] (0.183, 0) -- (0.183, 0.6) -- (0.6, 0.6) -- (0.6, 0.901) -- (0.901, 0.901) -- (0.901, 0.357) -- (0.357, 0.357) -- (0.357, 0);
+
+            \node[red] at (0,0) {$\bullet$};
+            \node[red] at (0.75, 0.75) {$\bullet$};
+        \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+Here, $x_*$ is a fixed point (intersection of $y = x$ and $y = f(x)$). We can determine $\gamma(x_0)$ graphically using the cobweb: given $x_{n-1}$, find $x_n = f(x_{n-1})$ by
+\begin{itemize}
+    \item $x_n = f(x_{n-1})$ on y-axis (height)
+    \item $x_n$ on $x$-axis by using diagonal $y =x$
+    \item iterate this process
+\end{itemize}
+
+\section{April 9}
+\subsection{Stability of Fixed Points}
+
+Assume $f \in C^1$. Assume $x_*$ is a fixed point of $f$. Then
+\[\begin{cases}
+        \abs{f'(x)} < 1 & x_* \text{ stable}   \\
+        \abs{f'(x)} > 1 & x_* \text{ unstable} \\
+    \end{cases}\]
+so we expect bifurcations when $f'(x_*) = \pm 1$.
+
+\begin{proof}
+    \emph{Proof:} Take $x = x_* + d$. Then
+    \begin{align*}
+        f(x) & = f(x_* + d)                                \\
+             & = f(x_*) + f'(x_*)d + O(d^2)                \\
+             & = x_* + [\underbrace{f'(x_*)}_{<1} + O(d)]d
+    \end{align*}
+
+    We know that there is a $C > 0$ such that $\abs{O(d)} \leq C\abs{d}$. In particular, $\abs{O(d)} \leq C \delta$ for all $d$ with $\abs{d} < \delta$.
+
+    We can pick $\delta > 0$ small enough that
+    \[\abs{f'(x_*) + O(d)} \leq \abs{f'(x_*) \pm C\delta} \leq a < 1\]
+
+    Now we iterate. Pick $x_0 = x_* + d_0$ with $\abs{d_0} < \delta$ and write $x_n = x_* + d_n$ for $n \geq 1$. We need $d_n \to 0$, and in fact,
+    \begin{align*}
+        x_n       & = f(x_{n-1})                                 \\
+        x_* + d_n & = f(x_* + d_{n-1})                           \\
+                  & = x_* + [f'(x_*) + O(d_{n-1})]d_{n-1}        \\
+        d_n       & = [f'(x_*) + O(d_{n-1})]d_{n-1}              \\
+        \abs{d_n} & \leq \abs{f'(x_*) + O(d_{n-1})}\abs{d_{n-1}} \\
+    \end{align*}
+
+    As long as $\abs{d_{n-1}} \leq \delta$, we have
+    \[\abs{f'(x_*) + O(d_{n-1})} \leq a < 1\]
+
+    In particular, this holds for $n = 1$ :
+    \begin{align*}
+        \abs{d_n} & \leq \abs{f'(x_*) + O(d_{n-1})}\abs{d_{n-1}}                                            \\
+                  & \leq a \underbrace{\abs{d_{n-1}}}_{\leq a \abs{d_{n-2}} \leq \dots} < a \delta < \delta \\
+    \end{align*}
+
+    so
+    \[\abs{d_n} \leq a^n \abs{d_0}\]
+
+    Since $a < 1$, we have $d_n \to 0$ as $n \to \infty$, hence $f(x_n) \to x_*$
+\end{proof}
+
+We could determine this graphically using cobweb:
+
+\begin{center}
+    \begin{tabular}{ccc}
+        \multirow{1}{*}{Monotone Orbits} &
+        % Monotone stable
+        \begin{tikzpicture}
+            \begin{axis}[
+                    width=0.3\textwidth,
+                    axis lines=middle,
+                    no markers,
+                    xtick={0.5},
+                    xticklabels={$x_*$},
+                    ytick=\empty,
+                    clip=false,
+                    xlabel={$x$},
+                    ylabel={$y$},
+                    domain=0:1,
+                    ymin=0, ymax=1,
+                    xmin=0, xmax=1,
+                    view = {0}{90}
+                ]
+
+                \addplot[black] {x};
+
+                \addplot[blue, smooth] coordinates {
+                        (0, 0.4) (0.5, 0.5) (1, 0.8)
+                    } node[right] {stable};
+
+                \node[red] at (0.5, 0.5) {$\bullet$};
+
+                \draw[orange] (0.25, 0) -- (0.25, 0.4) -- (0.4, 0.4) -- (0.4, 0.5) -- (0.5, 0.5);
+                \draw[orange] (0.9, 0.9) -- (0.9, 0.75) -- (0.75, 0.75) -- (0.75, 0.65) -- (0.65, 0.65) -- (0.65, 0.55) -- (0.55, 0.55) -- (0.55, 0.5) -- (0.5, 0.5);
+
+                \node at (axis description cs: 0.5, -0.3) {$0 < f'(x_*) < 1$};
+            \end{axis}
+        \end{tikzpicture}      &
+        % Monotone Unstable
+        \begin{tikzpicture}
+            \begin{axis}[
+                    width=0.3\textwidth,
+                    axis lines=middle,
+                    no markers,
+                    xtick={0.5},
+                    xticklabels={$x_*$},
+                    ytick=\empty,
+                    clip=false,
+                    xlabel={$x$},
+                    ylabel={$y$},
+                    domain=0:1,
+                    ymin=0, ymax=1,
+                    xmin=0, xmax=1,
+                    view = {0}{90}
+                ]
+
+                \addplot[black] {x};
+
+                \addplot[blue, smooth] coordinates {
+                        (0, 0.4) (0.5, 0.5) (1, 0.8)
+                    } node[right] {stable};
+
+                \node[red] at (0.5, 0.5) {$\bullet$};
+
+                \draw[orange] (0.25, 0) -- (0.25, 0.3)-- (0.35, 0.3) -- (0.35, 0.5) -- (0.45, 0.5) -- (0.45, 0);
+                \draw[orange] (0.6, 0) -- (0.6, 0.6) -- (0.7, 0.6) -- (0.7, 0.7) -- (0.7, 0.9) -- (0.9, 0.9);
+
+                \node at (axis description cs: 0.5, -0.3) {$1 < f'(x_*)$};
+            \end{axis}
+        \end{tikzpicture}         \\
+        Oscillatory Orbits               &
+        % Oscillatory Stable
+        \begin{tikzpicture}
+            \begin{axis}[
+                    width=0.3\textwidth,
+                    axis lines=middle,
+                    no markers,
+                    xtick={0.5},
+                    xticklabels={$x_*$},
+                    ytick=\empty,
+                    clip=false,
+                    xlabel={$x$},
+                    ylabel={$y$},
+                    domain=0:1,
+                    ymin=0, ymax=1,
+                    xmin=0, xmax=1,
+                    view = {0}{90}
+                ]
+
+                \addplot[black] {x};
+
+                \addplot[blue, smooth] coordinates {
+                        (0, 0.8)  (0.5, 0.5) (1, 0.4)
+                    } node[right] {stable};
+
+                \draw[orange, thick] (0.25, 0) -- (0.25, 0.8) -- (0.8, 0.8) -- (0.8, 0.4) -- (0.4, 0.4) -- (0.4, 0.6) -- (0.6, 0.6) -- (0.6, 0.5) -- (0.5, 0.5);
+
+                \node[red] at (0.5, 0.5) {$\bullet$};
+
+                \node at (axis description cs: 0.5, -0.3) {$-1 < f'(x_*) < 0$};
+
+            \end{axis}
+        \end{tikzpicture}      &
+        % Oscillatory Unstable
+        \begin{tikzpicture}
+            \begin{axis}[
+                    width=0.3\textwidth,
+                    axis lines=middle,
+                    no markers,
+                    xtick={0.5},
+                    xticklabels={$x_*$},
+                    ytick=\empty,
+                    clip=false,
+                    xlabel={$x$},
+                    ylabel={$y$},
+                    domain=0:1,
+                    ymin=0, ymax=1,
+                    xmin=0, xmax=1,
+                    view = {0}{90}
+                ]
+
+                \addplot[black] {x};
+
+                \addplot[blue, smooth] coordinates {
+                        (0, 0.8)  (0.5, 0.5) (1, 0.4)
+                    } node[right] {stable};
+
+                \draw[orange, thick] (0.4, 0) -- (0.4, 0.6) -- (0.6, 0.6) -- (0.6, 0.3) -- (0.3, 0.3) -- (0.3, 1);
+                \node[red] at (0.5, 0.5) {$\bullet$};
+
+                \node at (axis description cs: 0.5, -0.3) {$f'(x_*) < -1$};
+
+            \end{axis}
+        \end{tikzpicture}
+    \end{tabular}
+\end{center}
+
+\emph{Example:} $f(x)  = 2x(1-x)$
+\begin{itemize}
+    \item Fixed points: $x = f(x) = 2x(1-x) \implies x =0, 1/2$
+    \item Stability:
+          \[f'(x) = 2-4x \implies\begin{cases}
+                  \abs{f'(0)} = 2 > 1   & \text{unstable} \\
+                  \abs{f'(1/2)} = 0 < 1 & \text{stable}
+              \end{cases}\]
+\end{itemize}
+
+\subsection{Periodic Orbits}
+\tbf{Example:} $f(x) = -x^3$ with $f: \R \to \R$ and $x_n = f(x_{n-1})$.
+\begin{itemize}
+    \item Fixed points: $x = f(x) = -x^3 \implies x= 0$
+    \item Stability: $f'(0) = -3(0)^2= 0 < 1$ so $x=0$ is stable
+    \item Period two orbits: we want $x_0$ with $f^2(x_0) = f(f(x_0)) = x_0$:
+          \[f^2(x) = f(f(x)) = f(-x^3) = -(-x^3)^3 = x^9 = x \implies x = 0, \pm 1\]
+
+          Since $x_*$ is the unique fixed point of $f$, we conclude that there is a unique period-2 orbit given by $\pm 1$ or $x_0 = 1$ and $x_1 = -1 = f(x_0)$.
+
+    \item Stability of period-2 orbit $\{x_0 = 1, x_1 = -1\}$: our criterion is for fixed orbits so we can apply the criterion to $x_{0, 1} = \pm 1$ as fixed points of $f^2(x)= x^9$.
+          \[\frac{d}{dx} f^2(x)= 9x^8 \implies \abs{f'(\pm 1)} = 9 > 1\]
+          so the period-2 orbit is unstable.
+\end{itemize}
 \end{document}
